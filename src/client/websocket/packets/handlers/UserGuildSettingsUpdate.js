@@ -1,5 +1,3 @@
-'use strict';
-
 const AbstractHandler = require('./AbstractHandler');
 const Constants = require('../../../../util/Constants');
 const ClientUserGuildSettings = require('../../../../structures/ClientUserGuildSettings');

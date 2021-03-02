@@ -1,5 +1,3 @@
-'use strict';
-
 const VolumeInterface = require('../util/VolumeInterface');
 const VoiceBroadcast = require('../VoiceBroadcast');
 const Constants = require('../../../util/Constants');
@@ -105,8 +103,8 @@ class StreamDispatcher extends VolumeInterface {
    * Stops the current stream permanently and emits an `end` event.
    * @param {string} [reason='user'] An optional reason for stopping the dispatcher
    */
-  end(reason) {
-    this.destroy('end', reason || 'user');
+  end(reason = 'user') {
+    this.destroy('end', reason);
   }
 
   setSpeaking(value) {

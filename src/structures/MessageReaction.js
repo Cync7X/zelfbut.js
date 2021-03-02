@@ -1,5 +1,3 @@
-'use strict';
-
 const Collection = require('../util/Collection');
 const Emoji = require('./Emoji');
 const ReactionEmoji = require('./ReactionEmoji');
@@ -62,7 +60,7 @@ class MessageReaction {
    * @param {UserResolvable} [user=this.message.client.user] The user to remove the reaction of
    * @returns {Promise<MessageReaction>}
    */
-  remove(user) { user=user||this.message.client.user;
+  remove(user = this.message.client.user) {
     const message = this.message;
     const userID = this.message.client.resolver.resolveUserID(user);
     if (!userID) return Promise.reject(new Error('Couldn\'t resolve the user ID to remove from the reaction.'));
@@ -90,8 +88,7 @@ class MessageReaction {
    * @param {Snowflake} [options.after] Limit fetching users to those with an id greater than the supplied id
    * @returns {Promise<Collection<Snowflake, User>>}
    */
-  fetchUsers(limit, obj) { if(limit===undefined)limit = 100; obj = obj || {};
-    var before = obj.before, after = obj.after;
+  fetchUsers(limit = 100, { after, before } = {}) {
     const message = this.message;
     return message.client.rest.methods.getMessageReactionUsers(
       message, this.emoji.identifier, { after, before, limit }

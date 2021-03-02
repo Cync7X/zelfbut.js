@@ -1,5 +1,3 @@
-'use strict';
-
 const Permissions = require('../util/Permissions');
 
 /**
@@ -29,7 +27,7 @@ class PermissionOverwrites {
      * The type of this overwrite
      * @type {string}
      */
-    this.type = data.type == 0 ? 'role' : 'member';
+    this.type = data.type;
 
     /**
      * The permissions that are denied for the user or role as a bitfield.

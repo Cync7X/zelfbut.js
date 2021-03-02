@@ -1,5 +1,3 @@
-'use strict';
-
 const Action = require('./Action');
 const TextChannel = require('../../structures/TextChannel');
 const VoiceChannel = require('../../structures/VoiceChannel');
@@ -43,10 +41,7 @@ class ChannelUpdateAction extends Action {
         // Create the new channel instance and copy over cached data
         const newChannel = new channelClass(channel.guild, data);
         if (channel.messages && newChannel.messages) {
-          for (const _arr of channel.messages) {
-			const id = _arr[0], message = _arr[1];
-			newChannel.messages.set(id, message);
-		  }
+          for (const [id, message] of channel.messages) newChannel.messages.set(id, message);
         }
 
         channel = newChannel;

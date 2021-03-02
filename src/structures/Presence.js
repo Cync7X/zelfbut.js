@@ -1,8 +1,4 @@
-'use strict';
-
-const _require = require("../util/Constants");
-const ActivityFlags = _require.ActivityFlags;
-const Endpoints = _require.Endpoints;
+const { ActivityFlags, Endpoints } = require('../util/Constants');
 const ReactionEmoji = require('./ReactionEmoji');
 
 /**
@@ -26,7 +22,7 @@ const ReactionEmoji = require('./ReactionEmoji');
  * Represents a user's presence.
  */
 class Presence {
-  constructor(data, client) { data=data||{};
+  constructor(data = {}, client) {
     /**
      * The client that instantiated this
      * @name Presence#client
@@ -202,7 +198,7 @@ class Game {
    */
   get flags() {
     const flags = [];
-    for (const _arr of Object.entries(ActivityFlags)) { const name = _arr[0], flag = _arr[1];
+    for (const [name, flag] of Object.entries(ActivityFlags)) {
       if ((this._flags & flag) === flag) flags.push(name);
     }
     return flags;

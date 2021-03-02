@@ -1,5 +1,3 @@
-'use strict';
-
 const AbstractHandler = require('./AbstractHandler');
 const Constants = require('../../../../util/Constants');
 
@@ -10,7 +8,6 @@ class TypingStartHandler extends AbstractHandler {
     const channel = client.channels.get(data.channel_id);
     const user = client.users.get(data.user_id);
     const timestamp = new Date(data.timestamp * 1000);
-	const v8since = data.timestamp * 1000;
 
     if (channel && user) {
       if (channel.type === 'voice') {
@@ -24,7 +21,6 @@ class TypingStartHandler extends AbstractHandler {
       } else {
         channel._typing.set(user.id, new TypingData(client, timestamp, timestamp, tooLate(channel, user)));
         client.emit(Constants.Events.TYPING_START, channel, user);
-		user.typing.since = v8since, user.typing.channel = channel;
       }
     }
   }
@@ -52,7 +48,6 @@ function tooLate(channel, user) {
   return channel.client.setTimeout(() => {
     channel.client.emit(Constants.Events.TYPING_STOP, channel, user, channel._typing.get(user.id));
     channel._typing.delete(user.id);
-	user.typing.since = null, user.typing.channel = null;
   }, 6000);
 }
 

@@ -1,5 +1,3 @@
-'use strict';
-
 const libs = {
   sodium: sodium => ({
     open: sodium.api.crypto_secretbox_open_easy,

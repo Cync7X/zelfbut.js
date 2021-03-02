@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 const fs = require('fs');
 const EventEmitter = require('events').EventEmitter;
@@ -22,7 +20,7 @@ class ShardingManager extends EventEmitter {
    * @param {string[]} [options.shardArgs=[]] Arguments to pass to the shard script when spawning
    * @param {string} [options.token] Token to use for automatic shard count and passing to shards
    */
-  constructor(file, options) { options = options || {};
+  constructor(file, options = {}) {
     super();
     options = Util.mergeDefault({
       totalShards: 'auto',
@@ -92,7 +90,7 @@ class ShardingManager extends EventEmitter {
    * @param {number} id The ID of the shard to spawn. **This is usually not necessary**
    * @returns {Promise<Shard>}
    */
-  createShard(id) { if(id===undefined)id=this.shards.size;
+  createShard(id = this.shards.size) {
     const shard = new Shard(this, id, this.shardArgs);
     this.shards.set(id, shard);
     /**
@@ -110,7 +108,7 @@ class ShardingManager extends EventEmitter {
    * @param {number} [delay=7500] How long to wait in between spawning each shard (in milliseconds)
    * @returns {Promise<Collection<number, Shard>>}
    */
-  spawn(amount, delay) { if(amount===undefined)amount = this.totalShards;
+  spawn(amount = this.totalShards, delay = 7500) {
     if (amount === 'auto') {
       return Util.fetchRecommendedShards(this.token).then(count => {
         this.totalShards = count;
@@ -120,7 +118,7 @@ class ShardingManager extends EventEmitter {
       if (typeof amount !== 'number' || isNaN(amount)) throw new TypeError('Amount of shards must be a number.');
       if (amount < 1) throw new RangeError('Amount of shards must be at least 1.');
       if (amount !== Math.floor(amount)) throw new TypeError('Amount of shards must be an integer.');
-      return this._spawn(amount, delay || 7500);
+      return this._spawn(amount, delay);
     }
   }
 
@@ -207,12 +205,7 @@ class ShardingManager extends EventEmitter {
    * @param {number} [currentShardIndex=0] The shard index to start respawning at
    * @returns {Promise<Collection<number, Shard>>}
    */
-  respawnAll(shardDelay, respawnDelay, waitForReady, currentShardIndex) {
-    // shardDelay = 5000, respawnDelay = 500, waitForReady = true, currentShardIndex = 0
-	if(shardDelay===undefined)shardDelay=5000;
-	if(respawnDelay===undefined)respawnDelay=500;
-	if(waitForReady===undefined)waitForReady=true;
-	if(currentShardIndex===undefined)currentShardIndex = 0;
+  respawnAll(shardDelay = 5000, respawnDelay = 500, waitForReady = true, currentShardIndex = 0) {
     let s = 0;
     const shard = this.shards.get(currentShardIndex);
     const promises = [shard.respawn(respawnDelay, waitForReady)];

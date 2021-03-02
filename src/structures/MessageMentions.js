@@ -1,7 +1,5 @@
-'use strict';
-
 const Collection = require('../util/Collection');
-const ChannelTypes = require('../util/Constants').ChannelTypes;
+const { ChannelTypes } = require('../util/Constants');
 
 /**
  * Keeps track of mentions in a {@link Message}.

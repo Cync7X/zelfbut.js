@@ -1,5 +1,3 @@
-'use strict';
-
 class AbstractHandler {
   constructor(packetManager) {
     this.packetManager = packetManager;

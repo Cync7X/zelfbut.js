@@ -1,5 +1,3 @@
-'use strict';
-
 const Collector = require('./interfaces/Collector');
 const util = require('util');
 
@@ -20,7 +18,7 @@ class MessageCollector extends Collector {
    * @param {MessageCollectorOptions} options The options to be applied to this collector
    * @emits MessageCollector#message
    */
-  constructor(channel, filter, options) { options = options || {};
+  constructor(channel, filter, options = {}) {
     super(channel.client, filter, options);
 
     /**

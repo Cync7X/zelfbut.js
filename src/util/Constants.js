@@ -1,5 +1,3 @@
-'use strict';
-
 exports.Package = require('../../package.json');
 
 /**
@@ -49,7 +47,6 @@ exports.DefaultOptions = {
   retryLimit: Infinity,
   disabledEvents: [],
   restTimeOffset: 500,
-  partials: [],
 
   /**
    * WebSocket options (these are left as snake_case to match the API)
@@ -61,7 +58,6 @@ exports.DefaultOptions = {
   ws: {
     large_threshold: 250,
     compress: require('os').platform() !== 'browser',
-	intents: 16383,
     properties: {
       $os: process ? process.platform : 'discord.js',
       $browser: 'discord.js',
@@ -76,26 +72,16 @@ exports.DefaultOptions = {
    * HTTP options
    * @typedef {Object} HTTPOptions
    * @property {number} [version=7] API version to use
-   * @property {string} [api='https://discord.com/api'] Base url of the API
-   * @property {string} [cdn='https://cdn.discord.com'] Base url of the CDN
+   * @property {string} [api='https://discordapp.com/api'] Base url of the API
+   * @property {string} [cdn='https://cdn.discordapp.com'] Base url of the CDN
    * @property {string} [invite='https://discord.gg'] Base url of invites
    */
   http: {
-    version: 8,
-    host: 'https://discord.com',
+    version: 7,
+    host: 'https://discordapp.com',
     cdn: 'https://cdn.discordapp.com',
   },
 };
-
-function keyMirror(arr) {
-	let ret = {};
-	for(let item of arr) {
-		ret[item] = item;
-	}
-	return ret;
-}
-
-exports.PartialTypes = keyMirror(['USER', 'CHANNEL', 'GUILD_MEMBER', 'MESSAGE', 'REACTION']);
 
 exports.WSCodes = {
   1000: 'Connection gracefully closed',
@@ -149,7 +135,7 @@ const Endpoints = exports.Endpoints = {
     return {
       toString: () => base,
       prune: `${base}/prune`,
-      embed: `${base}/widget`,
+      embed: `${base}/embed`,
       bans: `${base}/bans`,
       integrations: `${base}/integrations`,
       members: `${base}/members`,
@@ -197,7 +183,6 @@ const Endpoints = exports.Endpoints = {
       webhooks: `${base}/webhooks`,
       search: `${base}/messages/search`,
       pins: `${base}/pins`,
-	  follow: `${base}/followers`,
       Icon: (root, hash) => Endpoints.CDN(root).GDMIcon(channelID, hash),
       Pin: messageID => `${base}/pins/${messageID}`,
       Recipient: recipientID => `${base}/recipients/${recipientID}`,
@@ -223,7 +208,7 @@ const Endpoints = exports.Endpoints = {
   Member: m => exports.Endpoints.Guild(m.guild).Member(m),
   CDN(root) {
     return {
-      Emoji: (emojiID, format) => `${root}/emojis/${emojiID}.${format || 'png'}`,
+      Emoji: (emojiID, format = 'png') => `${root}/emojis/${emojiID}.${format}`,
       Asset: name => `${root}/assets/${name}`,
       Avatar: (userID, hash) => `${root}/avatars/${userID}/${hash}.${hash.startsWith('a_') ? 'gif' : 'png?size=2048'}`,
       Icon: (guildID, hash) => `${root}/icons/${guildID}/${hash}.jpg`,
@@ -253,10 +238,9 @@ const Endpoints = exports.Endpoints = {
     toString: () => '/gateway',
     bot: '/gateway/bot',
   },
-  Invite: inviteID => `/invites/${inviteID}?with_counts=true`,
+  Invite: inviteID => `/invite/${inviteID}?with_counts=true`,
   inviteLink: id => `https://discord.gg/${id}`,
   Webhook: (webhookID, token) => `/webhooks/${webhookID}${token ? `/${token}` : ''}`,
-  Commands: (clientid, guildid) => `/applications/${clientid}${guildid ? ('/guilds/' + guildid) : ''}/commands`,
 };
 
 
@@ -360,7 +344,6 @@ exports.Events = {
   CHANNEL_DELETE: 'channelDelete',
   CHANNEL_UPDATE: 'channelUpdate',
   CHANNEL_PINS_UPDATE: 'channelPinsUpdate',
-  COMMAND: 'command',
   MESSAGE_CREATE: 'message',
   MESSAGE_DELETE: 'messageDelete',
   MESSAGE_UPDATE: 'messageUpdate',
@@ -412,7 +395,7 @@ exports.ActivityTypes = [
  * * `SYNC`
  * * `PLAY`
  * @typedef {string} ActivityFlag
- * @see {@link https://discord.com/developers/docs/topics/gateway#activity-object-activity-flags}
+ * @see {@link https://discordapp.com/developers/docs/topics/gateway#activity-object-activity-flags}
  */
 exports.ActivityFlags = {
   INSTANCE: 1 << 0,

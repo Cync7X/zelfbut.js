@@ -1,6 +1,4 @@
-'use strict';
-
-const superagent = require('superagent');
+const snekfetch = require('snekfetch');
 const Constants = require('./Constants');
 const ConstantsHttp = Constants.DefaultOptions.http;
 
@@ -18,17 +16,7 @@ class Util {
    * @param {SplitOptions} [options] Options controlling the behaviour of the split
    * @returns {string|string[]}
    */
-  static splitMessage(text, options) {
-    var _options = options;
-	var _options$maxLength = _options.maxLength;
-	var maxLength = _options$maxLength === undefined ? 1950 : _options$maxLength;
-	var _options$char = _options.char;
-	var char = _options$char === undefined ? "\n" : _options$char;
-	var _options$prepend = _options.prepend;
-	var prepend = _options$prepend === undefined ? "" : _options$prepend;
-	var _options$append = _options.append;
-	var append = _options$append === undefined ? "" : _options$append;
-
+  static splitMessage(text, { maxLength = 1950, char = '\n', prepend = '', append = '' } = {}) {
     if (text.length <= maxLength) return text;
     const splitText = text.split(char);
     if (splitText.some(chunk => chunk.length > maxLength)) {
@@ -73,7 +61,7 @@ class Util {
    * @param {boolean} [onlyInlineCode=false] Whether to only escape inline code
    * @returns {string}
    */
-  static escapeMarkdown(text, onlyCodeBlock, onlyInlineCode) {
+  static escapeMarkdown(text, onlyCodeBlock = false, onlyInlineCode = false) {
     if (onlyCodeBlock) return text.replace(/```/g, '`\u200b``');
     if (onlyInlineCode) return text.replace(/\\(`|\\)/g, '$1').replace(/(`|\\)/g, '\\$1');
     return text.replace(/\\(\*|_|`|~|\\)/g, '$1').replace(/(\*|_|`|~|\\)/g, '\\$1');
@@ -85,14 +73,14 @@ class Util {
    * @param {number} [guildsPerShard=1000] Number of guilds per shard
    * @returns {Promise<number>} The recommended number of shards
    */
-  static fetchRecommendedShards(token, guildsPerShard) {
+  static fetchRecommendedShards(token, guildsPerShard = 1000) {
     return new Promise((resolve, reject) => {
       if (!token) throw new Error('A token must be provided.');
-      superagent.get(`${ConstantsHttp.host}/api/v${ConstantsHttp.version}${Constants.Endpoints.gateway.bot}`)
+      snekfetch.get(`${ConstantsHttp.host}/api/v${ConstantsHttp.version}${Constants.Endpoints.gateway.bot}`)
         .set('Authorization', `Bot ${token.replace(/^Bot\s*/i, '')}`)
         .end((err, res) => {
           if (err) reject(err);
-          resolve(res.body.shards * (1000 / (guildsPerShard === undefined ? 1000 : guildsPerShard)));
+          resolve(res.body.shards * (1000 / guildsPerShard));
         });
     });
   }
@@ -224,8 +212,7 @@ class Util {
    * @returns {number}
    * @private
    */
-  static moveElementInArray(array, element, newIndex, offset) {
-    if(offset === undefined) offset = 0;
+  static moveElementInArray(array, element, newIndex, offset = false) {
     const index = array.indexOf(element);
     newIndex = (offset ? index : 0) + newIndex;
     if (newIndex > -1 && newIndex < array.length) {

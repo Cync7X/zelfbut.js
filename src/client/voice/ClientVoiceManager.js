@@ -1,5 +1,3 @@
-'use strict';
-
 const Collection = require('../../util/Collection');
 const VoiceConnection = require('./VoiceConnection');
 
@@ -25,20 +23,12 @@ class ClientVoiceManager {
     this.client.on('self.voiceStateUpdate', this.onVoiceStateUpdate.bind(this));
   }
 
-  onVoiceServer(options) {
-	var _options = options;
-	var guild_id = _options.guild_id;
-	var token = _options.token;
-	var endpoint = _options.endpoint;
+  onVoiceServer({ guild_id, token, endpoint }) {
     const connection = this.connections.get(guild_id);
     if (connection) connection.setTokenAndEndpoint(token, endpoint);
   }
 
-  onVoiceStateUpdate(options) {
-	var _options = options;
-	var guild_id = _options.guild_id;
-	var session_id = _options.session_id;
-	var channel_id = _options.channel_id;
+  onVoiceStateUpdate({ guild_id, session_id, channel_id }) {
     const connection = this.connections.get(guild_id);
     if (!connection) return;
     if (!channel_id) {

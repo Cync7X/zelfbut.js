@@ -1,5 +1,3 @@
-'use strict';
-
 const util = require('util');
 const Long = require('long');
 const User = require('./User');
@@ -155,7 +153,7 @@ class Guild {
      * Whether embedded images are enabled on this guild
      * @type {boolean}
      */
-    this.embedEnabled = data.widget_enabled;
+    this.embedEnabled = data.embed_enabled;
 
     /**
      * The verification level of the guild
@@ -235,7 +233,7 @@ class Guild {
      * @type {?string}
      * @name Guild#embedChannelID
      */
-    if (typeof data.widget_channel_id !== 'undefined') this.embedChannelID = data.widget_channel_id;
+    if (typeof data.embed_channel_id !== 'undefined') this.embedChannelID = data.embed_channel_id;
 
     /**
      * The maximum amount of members the guild can have
@@ -668,7 +666,7 @@ class Guild {
    *   .then(bans => console.log(`This guild has ${bans.size} bans`))
    *   .catch(console.error);
    */
-  fetchBans(withReasons) {
+  fetchBans(withReasons = false) {
     if (withReasons) return this.client.rest.methods.getGuildBans(this);
     return this.client.rest.methods.getGuildBans(this)
       .then(bans => {
@@ -848,7 +846,7 @@ class Guild {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  fetchMember(user, cache) { if(cache===undefined) cache = true;
+  fetchMember(user, cache = true) {
     const userID = this.client.resolver.resolveUserID(user);
     if (!userID) return Promise.reject(new Error('Invalid id provided.'));
     const member = this.members.get(userID);
@@ -873,7 +871,7 @@ class Guild {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  fetchMembers(query, limit) { if(query===undefined)query = '';if(limit===undefined) limit = 0;
+  fetchMembers(query = '', limit = 0) {
     return new Promise((resolve, reject) => {
       if (this.memberCount === this.members.size) {
         resolve(this);
@@ -898,15 +896,6 @@ class Guild {
       this.client.setTimeout(() => reject(new Error('Members didn\'t arrive in time.')), 120 * 1000);
     });
   }
-  
-  addCommand(name, description, _options) {
-    var options = [];
-    for(var i=2; i<arguments.length; i++) {
-      options.push(arguments[i]);
-    }
-
-    this.client.addGuildCommand(name, description, this.id, options)
-  }
 
   /**
    * Performs a search within the entire guild.
@@ -925,7 +914,7 @@ class Guild {
    *   })
    *   .catch(console.error);
    */
-  search(options) { options = options || {};
+  search(options = {}) {
     return this.client.rest.methods.search(this, options);
   }
 
@@ -1220,11 +1209,11 @@ class Guild {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  ban(user, options) { options = options || {};
+  ban(user, options = {}) {
     if (typeof options === 'number') {
-      options = { reason: null, 'delete_message_days': options };
+      options = { reason: null, 'delete-message-days': options };
     } else if (typeof options === 'string') {
-      options = { reason: options, 'delete_message_days': 0 };
+      options = { reason: options, 'delete-message-days': 0 };
     }
     if (options.days) options['delete-message-days'] = options.days;
     return this.client.rest.methods.banGuildMember(this, user, options);
@@ -1262,7 +1251,7 @@ class Guild {
    *   .then(pruned => console.log(`I just pruned ${pruned} people!`))
    *   .catch(console.error);
    */
-  pruneMembers(days, dry, reason) { if(dry===undefined) dry=false;
+  pruneMembers(days, dry = false, reason) {
     if (typeof days !== 'number') throw new TypeError('Days must be a number.');
     return this.client.rest.methods.pruneGuildMembers(this, days, dry, reason);
   }
@@ -1350,10 +1339,7 @@ class Guild {
    *   .catch(console.error);
    */
   setChannelPositions(channelPositions) {
-    channelPositions = channelPositions.map(options => {
-		var channel = options.channel, position = options.position;
-		return ({ id: channel.id || channel, position });
-	});
+    channelPositions = channelPositions.map(({ channel, position }) => ({ id: channel.id || channel, position }));
     return this.client.rest.methods.setChannelPositions(this.id, channelPositions);
   }
 
@@ -1370,10 +1356,7 @@ class Guild {
    * @returns {Promise<Guild>}
    */
   setRolePositions(rolePositions) {
-    rolePositions = rolePositions.map(options => {
-		var role = options.role, position = options.position;
-		return ({ id: role.id || role, position });
-	});
+    rolePositions = rolePositions.map(({ role, position }) => ({ id: role.id || role, position }));
     return this.client.rest.methods.setRolePositions(this.id, rolePositions);
   }
 
@@ -1407,8 +1390,8 @@ class Guild {
    *   .then(role => console.log(`Created new role with name ${role.name} and color ${role.color}`))
    *   .catch(console.error)
    */
-  createRole(data, reason) {
-    return this.client.rest.methods.createGuildRole(this, data || {}, reason);
+  createRole(data = {}, reason) {
+    return this.client.rest.methods.createGuildRole(this, data, reason);
   }
 
   /**
@@ -1499,12 +1482,12 @@ class Guild {
       Util.arraysEqual(this.features, guild.features) &&
       this.ownerID === guild.owner_id &&
       this.verificationLevel === guild.verification_level &&
-      this.embedEnabled === guild.widget_enabled;
+      this.embedEnabled === guild.embed_enabled;
 
     if (equal) {
       if (this.embedChannel) {
-        if (this.embedChannel.id !== guild.widget_channel_id) equal = false;
-      } else if (guild.widget_channel_id) {
+        if (this.embedChannel.id !== guild.embed_channel_id) equal = false;
+      } else if (guild.embed_channel_id) {
         equal = false;
       }
     }
@@ -1526,7 +1509,7 @@ class Guild {
     return this.name;
   }
 
-  _addMember(guildUser, emitEvent) { if(emitEvent === undefined) emitEvent = true;
+  _addMember(guildUser, emitEvent = true) {
     const existing = this.members.has(guildUser.user.id);
     if (!(guildUser.user instanceof User)) guildUser.user = this.client.dataManager.newUser(guildUser.user);
 
@@ -1623,7 +1606,7 @@ class Guild {
    * @param {boolean} [relative=false] Position Moves the role relative to its current position
    * @returns {Promise<Guild>}
    */
-  setRolePosition(role, position, relative) { relative=relative||false;
+  setRolePosition(role, position, relative = false) {
     if (typeof role === 'string') {
       role = this.roles.get(role);
       if (!role) return Promise.reject(new Error('Supplied role is not a role or snowflake.'));
@@ -1647,7 +1630,7 @@ class Guild {
    * @param {boolean} [relative=false] Position Moves the channel relative to its current position
    * @returns {Promise<Guild>}
    */
-  setChannelPosition(channel, position, relative) {
+  setChannelPosition(channel, position, relative = false) {
     if (typeof channel === 'string') {
       channel = this.channels.get(channel);
       if (!channel) return Promise.reject(new Error('Supplied channel is not a channel or snowflake.'));
@@ -1658,7 +1641,7 @@ class Guild {
 
     let updatedChannels = this._sortedChannels(channel.type).array();
 
-    Util.moveElementInArray(updatedChannels, channel, position, relative || false);
+    Util.moveElementInArray(updatedChannels, channel, position, relative);
 
     updatedChannels = updatedChannels.map((c, i) => ({ id: c.id, position: i }));
     return this.client.rest.methods.setChannelPositions(this.id, updatedChannels);

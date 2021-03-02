@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Represents a user connection (or "platform identity").
  */

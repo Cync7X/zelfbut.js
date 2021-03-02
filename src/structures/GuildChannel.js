@@ -1,5 +1,3 @@
-'use strict';
-
 const Channel = require('./Channel');
 const Role = require('./Role');
 const PermissionOverwrites = require('./PermissionOverwrites');
@@ -55,10 +53,6 @@ class GuildChannel extends Channel {
         this.permissionOverwrites.set(overwrite.id, new PermissionOverwrites(this, overwrite));
       }
     }
-  }
-  
-  get server() {
-    return this.guild;
   }
 
   /**
@@ -156,7 +150,7 @@ class GuildChannel extends Channel {
     return null;
   }
 
-  overwritesFor(member, verified, roles) {
+  overwritesFor(member, verified = false, roles = null) {
     if (!verified) member = this.client.resolver.resolveGuildMember(this.guild, member);
     if (!member) return [];
 
@@ -200,9 +194,7 @@ class GuildChannel extends Channel {
    *   reason: 'Needed to change permissions'
    * });
    */
-  replacePermissionOverwrites(options) {
-	// { overwrites, reason } = {}
-    var overwrites = options.overwrites, reason = options.reason;
+  replacePermissionOverwrites({ overwrites, reason } = {}) {
     return this.edit({ permissionOverwrites: overwrites, reason })
       .then(() => this);
   }
@@ -408,8 +400,8 @@ class GuildChannel extends Channel {
    *   .then(invite => console.log(`Created an invite with a code of ${invite.code}`))
    *   .catch(console.error);
    */
-  createInvite(options, reason) {
-    return this.client.rest.methods.createChannelInvite(this, options || {}, reason);
+  createInvite(options = {}, reason) {
+    return this.client.rest.methods.createChannelInvite(this, options, reason);
   }
 
   /* eslint-disable max-len */
@@ -447,10 +439,7 @@ class GuildChannel extends Channel {
    *   .then(clone => console.log(`Cloned ${channel.name} to make a channel called ${clone.name}`))
    *   .catch(console.error);
    */
-  clone(nameOrOptions, withPermissions, withTopic, reason) {
-	nameOrOptions=nameOrOptions||{};
-	if(withPermissions===undefined)withPermissions=true;
-	if(withTopic===undefined)withTopic = true;
+  clone(nameOrOptions = {}, withPermissions = true, withTopic = true, reason) {
     // If more than one parameter was specified or the first is a string,
     // convert them to a compatible options object and issue a warning
     if (arguments.length > 1 || typeof nameOrOptions === 'string') {

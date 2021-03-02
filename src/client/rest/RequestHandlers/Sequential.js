@@ -1,9 +1,6 @@
-'use strict';
-
 const RequestHandler = require('./RequestHandler');
 const DiscordAPIError = require('../DiscordAPIError');
-var _require = require("../../../util/Constants");
-var RATE_LIMIT = _require.Events.RATE_LIMIT;;
+const { Events: { RATE_LIMIT } } = require('../../../util/Constants');
 
 /**
  * Handles API Requests sequentially, i.e. we wait until the current request is finished before moving onto

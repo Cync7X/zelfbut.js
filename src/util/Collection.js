@@ -1,5 +1,3 @@
-'use strict';
-
 const util = require('util');
 
 /**
@@ -48,24 +46,7 @@ class Collection extends Map {
    * @returns {Array}
    */
   array() {
-    // if (!this._array || this._array.length !== this.size) this._array = [...this.values()];
-	function _toConsumableArray(arr) {
-	  if (Array.isArray(arr)) {
-		var i = 0;
-		var arr2 = Array(arr.length);
-		for (; i < arr.length; i++) {
-		  arr2[i] = arr[i];
-		}
-		return arr2;
-	  } else {
-		return Array.from(arr);
-	  }
-	}
-	
-	if (!this._array || this._array.length !== this.size) {
-	  this._array = [].concat(_toConsumableArray(this.values()));
-	}
-	
+    if (!this._array || this._array.length !== this.size) this._array = [...this.values()];
     return this._array;
   }
 
@@ -77,23 +58,8 @@ class Collection extends Map {
    * @returns {Array}
    */
   keyArray() {
-    // if (!this._keyArray || this._keyArray.length !== this.size) this._keyArray = [...this.keys()];
-    function _toConsumableArray(arr) {
-	  if (Array.isArray(arr)) {
-		var i = 0;
-		var arr2 = Array(arr.length);
-		for (; i < arr.length; i++) {
-		  arr2[i] = arr[i];
-		}
-		return arr2;
-	  } else {
-		return Array.from(arr);
-	  }
-	}
-	  if (!this._keyArray || this._keyArray.length !== this.size) {
-		this._keyArray = [].concat(_toConsumableArray(this.keys()));
-	  }
-	return this._keyArray;
+    if (!this._keyArray || this._keyArray.length !== this.size) this._keyArray = [...this.keys()];
+    return this._keyArray;
   }
 
   /**
@@ -235,7 +201,7 @@ class Collection extends Map {
       }
       return null;
     } else if (typeof propOrFn === 'function') {
-      for (const _arr of this) { const key = _arr[0], val = _arr[1];
+      for (const [key, val] of this) {
         if (propOrFn(val, key, this)) return val;
       }
       return null;
@@ -261,12 +227,12 @@ class Collection extends Map {
     /* eslint-enable max-len */
     if (typeof propOrFn === 'string') {
       if (typeof value === 'undefined') throw new Error('Value must be specified.');
-      for (const _arr of this) { const key = _arr[0], val = _arr[1];
+      for (const [key, val] of this) {
         if (val[propOrFn] === value) return key;
       }
       return null;
     } else if (typeof propOrFn === 'function') {
-      for (const _arr of this) { const key = _arr[0], val = _arr[1];
+      for (const [key, val] of this) {
         if (propOrFn(val, key, this)) return key;
       }
       return null;
@@ -302,7 +268,7 @@ class Collection extends Map {
   sweep(fn, thisArg) {
     if (thisArg) fn = fn.bind(thisArg);
     const previousSize = this.size;
-    for (const _arr of this) { const key = _arr[0], val = _arr[1];
+    for (const [key, val] of this) {
       if (fn(val, key, this)) this.delete(key);
     }
     return previousSize - this.size;
@@ -319,7 +285,7 @@ class Collection extends Map {
   filter(fn, thisArg) {
     if (thisArg) fn = fn.bind(thisArg);
     const results = new Collection();
-    for (const _arr of this) { const key = _arr[0], val = _arr[1];
+    for (const [key, val] of this) {
       if (fn(val, key, this)) results.set(key, val);
     }
     return results;
@@ -336,7 +302,7 @@ class Collection extends Map {
   filterArray(fn, thisArg) {
     if (thisArg) fn = fn.bind(thisArg);
     const results = [];
-    for (const _arr of this) { const key = _arr[0], val = _arr[1];
+    for (const [key, val] of this) {
       if (fn(val, key, this)) results.push(val);
     }
     return results;
@@ -353,7 +319,7 @@ class Collection extends Map {
   partition(fn, thisArg) {
     if (typeof thisArg !== 'undefined') fn = fn.bind(thisArg);
     const results = [new Collection(), new Collection()];
-    for (const _arr of this) { const key = _arr[0], val = _arr[1];
+    for (const [key, val] of this) {
       if (fn(val, key, this)) {
         results[0].set(key, val);
       } else {
@@ -374,9 +340,7 @@ class Collection extends Map {
     if (thisArg) fn = fn.bind(thisArg);
     const arr = new Array(this.size);
     let i = 0;
-    for (const _arr of this) { const key = _arr[0], val = _arr[1];
-      arr[i++] = fn(val, key, this);
-    }
+    for (const [key, val] of this) arr[i++] = fn(val, key, this);
     return arr;
   }
 
@@ -389,7 +353,7 @@ class Collection extends Map {
    */
   some(fn, thisArg) {
     if (thisArg) fn = fn.bind(thisArg);
-    for (const _arr of this) { const key = _arr[0], val = _arr[1];
+    for (const [key, val] of this) {
       if (fn(val, key, this)) return true;
     }
     return false;
@@ -404,7 +368,7 @@ class Collection extends Map {
    */
   every(fn, thisArg) {
     if (thisArg) fn = fn.bind(thisArg);
-    for (const _arr of this) { const key = _arr[0], val = _arr[1];
+    for (const [key, val] of this) {
       if (!fn(val, key, this)) return false;
     }
     return true;
@@ -422,13 +386,10 @@ class Collection extends Map {
     let accumulator;
     if (typeof initialValue !== 'undefined') {
       accumulator = initialValue;
-      for (const _arr of this) {
-        const key = _arr[0], val = _arr[1];
-        accumulator = fn(accumulator, val, key, this);
-      }
+      for (const [key, val] of this) accumulator = fn(accumulator, val, key, this);
     } else {
       let first = true;
-      for (const _arr of this) { const key = _arr[0], val = _arr[1];
+      for (const [key, val] of this) {
         if (first) {
           accumulator = val;
           first = false;
@@ -473,109 +434,13 @@ class Collection extends Map {
    * @returns {Collection}
    * @example const newColl = someColl.concat(someOtherColl, anotherColl, ohBoyAColl);
    */
-  concat() {
-	  var _slicedToArray = function() {
-		  function sliceIterator$jscomp$0(arr$jscomp$8, i$jscomp$3) {
-			var _arr$jscomp$0 = [];
-			var _n$jscomp$0 = true;
-			var _d$jscomp$0 = false;
-			var _e$jscomp$0 = undefined;
-			try {
-			  var _i$jscomp$0 = arr$jscomp$8[Symbol.iterator]();
-			  var _s$jscomp$0;
-			  for (; !(_n$jscomp$0 = (_s$jscomp$0 = _i$jscomp$0.next()).done); _n$jscomp$0 = true) {
-				_arr$jscomp$0.push(_s$jscomp$0.value);
-				if (i$jscomp$3 && _arr$jscomp$0.length === i$jscomp$3) {
-				  break;
-				}
-			  }
-			} catch (err$jscomp$3) {
-			  _d$jscomp$0 = true;
-			  _e$jscomp$0 = err$jscomp$3;
-			} finally {
-			  try {
-				if (!_n$jscomp$0 && _i$jscomp$0["return"]) {
-				  _i$jscomp$0["return"]();
-				}
-			  } finally {
-				if (_d$jscomp$0) {
-				  throw _e$jscomp$0;
-				}
-			  }
-			}
-			return _arr$jscomp$0;
-		  }
-		  return function(arr$jscomp$9, i$jscomp$4) {
-			if (Array.isArray(arr$jscomp$9)) {
-			  return arr$jscomp$9;
-			} else {
-			  if (Symbol.iterator in Object(arr$jscomp$9)) {
-				return sliceIterator$jscomp$0(arr$jscomp$9, i$jscomp$4);
-			  } else {
-				throw new TypeError("Invalid attempt to destructure non-iterable instance");
-			  }
-			}
-		  };
-		}();
-	  
-	  var newColl$jscomp$0 = this.clone();
-	  var _len$jscomp$0 = arguments.length;
-	  var collections$jscomp$0 = Array(_len$jscomp$0);
-	  var _key$jscomp$0 = 0;
-	  for (; _key$jscomp$0 < _len$jscomp$0; _key$jscomp$0++) {
-		collections$jscomp$0[_key$jscomp$0] = arguments[_key$jscomp$0];
-	  }
-	  var _iteratorNormalCompletion$jscomp$0 = true;
-	  var _didIteratorError$jscomp$0 = false;
-	  var _iteratorError$jscomp$0 = undefined;
-	  try {
-		var _iterator$jscomp$0 = collections$jscomp$0[Symbol.iterator]();
-		var _step$jscomp$0;
-		for (; !(_iteratorNormalCompletion$jscomp$0 = (_step$jscomp$0 = _iterator$jscomp$0.next()).done); _iteratorNormalCompletion$jscomp$0 = true) {
-		  var coll$jscomp$0 = _step$jscomp$0.value;
-		  var _iteratorNormalCompletion2$jscomp$0 = true;
-		  var _didIteratorError2$jscomp$0 = false;
-		  var _iteratorError2$jscomp$0 = undefined;
-		  try {
-			var _iterator2$jscomp$0 = coll$jscomp$0[Symbol.iterator]();
-			var _step2$jscomp$0;
-			for (; !(_iteratorNormalCompletion2$jscomp$0 = (_step2$jscomp$0 = _iterator2$jscomp$0.next()).done); _iteratorNormalCompletion2$jscomp$0 = true) {
-			  var _step2$value$jscomp$0 = _slicedToArray(_step2$jscomp$0.value, 2);
-			  var key$jscomp$35 = _step2$value$jscomp$0[0];
-			  var val$jscomp$0 = _step2$value$jscomp$0[1];
-			  newColl$jscomp$0.set(key$jscomp$35, val$jscomp$0);
-			}
-		  } catch (err$jscomp$4) {
-			_didIteratorError2$jscomp$0 = true;
-			_iteratorError2$jscomp$0 = err$jscomp$4;
-		  } finally {
-			try {
-			  if (!_iteratorNormalCompletion2$jscomp$0 && _iterator2$jscomp$0.return) {
-				_iterator2$jscomp$0.return();
-			  }
-			} finally {
-			  if (_didIteratorError2$jscomp$0) {
-				throw _iteratorError2$jscomp$0;
-			  }
-			}
-		  }
-		}
-	  } catch (err$jscomp$5) {
-		_didIteratorError$jscomp$0 = true;
-		_iteratorError$jscomp$0 = err$jscomp$5;
-	  } finally {
-		try {
-		  if (!_iteratorNormalCompletion$jscomp$0 && _iterator$jscomp$0.return) {
-			_iterator$jscomp$0.return();
-		  }
-		} finally {
-		  if (_didIteratorError$jscomp$0) {
-			throw _iteratorError$jscomp$0;
-		  }
-		}
-	  }
-	  return newColl$jscomp$0;
-	}
+  concat(...collections) {
+    const newColl = this.clone();
+    for (const coll of collections) {
+      for (const [key, val] of coll) newColl.set(key, val);
+    }
+    return newColl;
+  }
 
   /**
    * Calls the `delete()` method on all items that have it.
@@ -614,23 +479,8 @@ class Collection extends Map {
    * according to the string conversion of each element.
    * @returns {Collection}
    */
-  sort(compareFunction) { compareFunction=compareFunction||((x, y) => +(x > y) || +(x === y) - 1);
-    // return new Collection([...this.entries()].sort((a, b) => compareFunction(a[1], b[1], a[0], b[0])));
-	function _toConsumableArray(arr) {
-	  if (Array.isArray(arr)) {
-		var i = 0;
-		var arr2 = Array(arr.length);
-		for (; i < arr.length; i++) {
-		  arr2[i] = arr[i];
-		}
-		return arr2;
-	  } else {
-		return Array.from(arr);
-	  }
-	}
-	  return new Collection([].concat(_toConsumableArray(this.entries())).sort(function(a, b) {
-		return compareFunction(a[1], b[1], a[0], b[0]);
-	  }));
+  sort(compareFunction = (x, y) => +(x > y) || +(x === y) - 1) {
+    return new Collection([...this.entries()].sort((a, b) => compareFunction(a[1], b[1], a[0], b[0])));
   }
 }
 
@@ -652,7 +502,7 @@ Collection.prototype.find = function find(propOrFn, value) {
     }
     return null;
   } else if (typeof propOrFn === 'function') {
-    for (const _arr of this) { const key = _arr[0], val = _arr[1];
+    for (const [key, val] of this) {
       if (propOrFn(val, key, this)) return val;
     }
     return null;
@@ -665,12 +515,12 @@ Collection.prototype.findKey = function findKey(propOrFn, value) {
   if (typeof propOrFn === 'string') {
     process.emitWarning('Collection#findKey: pass a function instead', 'DeprecationWarning');
     if (typeof value === 'undefined') throw new Error('Value must be specified.');
-    for (const _arr of this) { const key = _arr[0], val = _arr[1];
+    for (const [key, val] of this) {
       if (val[propOrFn] === value) return key;
     }
     return null;
   } else if (typeof propOrFn === 'function') {
-    for (const _arr of this) { const key = _arr[0], val = _arr[1];
+    for (const [key, val] of this) {
       if (propOrFn(val, key, this)) return key;
     }
     return null;

@@ -1,5 +1,3 @@
-'use strict';
-
 const Action = require('./Action');
 const DMChannel = require('../../structures/DMChannel');
 

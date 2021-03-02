@@ -1,5 +1,3 @@
-'use strict';
-
 const Webhook = require('../structures/Webhook');
 const RESTManager = require('./rest/RESTManager');
 const ClientDataResolver = require('./ClientDataResolver');
@@ -65,21 +63,14 @@ class WebhookClient extends Webhook {
    * @param {...*} args Arguments for the function
    * @returns {Timeout}
    */
-  setTimeout(fn$jscomp$0, delay$jscomp$0) {
-	  var _len$jscomp$0 = arguments.length;
-	  var args$jscomp$0 = Array(_len$jscomp$0 > 2 ? _len$jscomp$0 - 2 : 0);
-	  var _key$jscomp$0 = 2;
-	  for (; _key$jscomp$0 < _len$jscomp$0; _key$jscomp$0++) {
-		args$jscomp$0[_key$jscomp$0 - 2] = arguments[_key$jscomp$0];
-	  }
-	  var _this$jscomp$0 = this;
-	  var timeout$jscomp$1 = setTimeout(function() {
-		fn$jscomp$0.apply(undefined, args$jscomp$0);
-		_this$jscomp$0._timeouts.delete(timeout$jscomp$1);
-	  }, delay$jscomp$0);
-	  this._timeouts.add(timeout$jscomp$1);
-	  return timeout$jscomp$1;
-	}
+  setTimeout(fn, delay, ...args) {
+    const timeout = setTimeout(() => {
+      fn(...args);
+      this._timeouts.delete(timeout);
+    }, delay);
+    this._timeouts.add(timeout);
+    return timeout;
+  }
 
   /**
    * Clears a timeout.
@@ -97,17 +88,11 @@ class WebhookClient extends Webhook {
    * @param {...*} args Arguments for the function
    * @returns {Timeout}
    */
-  setInterval(fn$jscomp$0, delay$jscomp$0) {
-	  var _len$jscomp$0 = arguments.length;
-	  var args$jscomp$0 = Array(_len$jscomp$0 > 2 ? _len$jscomp$0 - 2 : 0);
-	  var _key$jscomp$0 = 2;
-	  for (; _key$jscomp$0 < _len$jscomp$0; _key$jscomp$0++) {
-		args$jscomp$0[_key$jscomp$0 - 2] = arguments[_key$jscomp$0];
-	  }
-	  var interval$jscomp$0 = setInterval.apply(undefined, [fn$jscomp$0, delay$jscomp$0].concat(args$jscomp$0));
-	  this._intervals.add(interval$jscomp$0);
-	  return interval$jscomp$0;
-	}
+  setInterval(fn, delay, ...args) {
+    const interval = setInterval(fn, delay, ...args);
+    this._intervals.add(interval);
+    return interval;
+  }
 
   /**
    * Clears an interval.

@@ -1,5 +1,3 @@
-'use strict';
-
 const Long = require('long');
 
 // Discord epoch (2015-01-01T00:00:00.000Z)
@@ -32,7 +30,7 @@ class SnowflakeUtil {
    * @param {number|Date} [timestamp=Date.now()] Timestamp or date of the snowflake to generate
    * @returns {Snowflake} The generated snowflake
    */
-  static generate(timestamp) { timestamp=timestamp||Date.now();
+  static generate(timestamp = Date.now()) {
     if (timestamp instanceof Date) timestamp = timestamp.getTime();
     if (typeof timestamp !== 'number' || isNaN(timestamp)) {
       throw new TypeError(
@@ -77,8 +75,8 @@ class SnowflakeUtil {
   }
 }
 
-function pad(v, n, c) {
-  return String(v).length >= n ? String(v) : (String(c===undefined?'0':c).repeat(n) + v).slice(-n);
+function pad(v, n, c = '0') {
+  return String(v).length >= n ? String(v) : (String(c).repeat(n) + v).slice(-n);
 }
 
 module.exports = SnowflakeUtil;

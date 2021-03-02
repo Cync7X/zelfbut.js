@@ -1,5 +1,3 @@
-'use strict';
-
 const AbstractHandler = require('./AbstractHandler');
 
 const ClientUser = require('../../../../structures/ClientUser');
@@ -53,7 +51,7 @@ class ReadyHandler extends AbstractHandler {
         id: '1',
         username: 'Clyde',
         discriminator: '0000',
-        avatar: 'https://discord.com/assets/f78426a064bc9dd24847519259bc42af.png',
+        avatar: 'https://discordapp.com/assets/f78426a064bc9dd24847519259bc42af.png',
         bot: true,
         status: 'online',
         game: null,

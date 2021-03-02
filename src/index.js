@@ -1,21 +1,3 @@
-'use strict';
-
-if(!Array.prototype.includes) {
-	Array.prototype.includes = (function(fnd) {
-		for(let item of this) {
-			if(item == fnd) return 1;
-		}
-		
-		return 0;
-	});
-}
-
-if(!process.emitWarning) {
-	process.emitWarning = (function(msg) {
-		
-	});
-}
-
 const Util = require('./util/Util');
 
 module.exports = {
@@ -81,7 +63,6 @@ module.exports = {
   ReactionCollector: require('./structures/ReactionCollector'),
   RichEmbed: require('./structures/RichEmbed'),
   Role: require('./structures/Role'),
-  Sticker: require('./structures/Sticker'),
   StoreChannel: require('./structures/StoreChannel'),
   TextChannel: require('./structures/TextChannel'),
   User: require('./structures/User'),

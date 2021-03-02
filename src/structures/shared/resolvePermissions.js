@@ -1,5 +1,3 @@
-'use strict';
-
 const Permissions = require('../../util/Permissions');
 const Collection = require('../../util/Collection');
 

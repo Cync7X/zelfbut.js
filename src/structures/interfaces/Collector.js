@@ -1,5 +1,3 @@
-'use strict';
-
 const Collection = require('../../util/Collection');
 const EventEmitter = require('events').EventEmitter;
 
@@ -23,7 +21,7 @@ const EventEmitter = require('events').EventEmitter;
  * @abstract
  */
 class Collector extends EventEmitter {
-  constructor(client, filter, options) { options = options || {};
+  constructor(client, filter, options = {}) {
     super();
 
     /**
@@ -88,31 +86,36 @@ class Collector extends EventEmitter {
    * @emits Collector#collect
    * @private
    */
-  _handle() {
-	  var _this$jscomp$0 = this;
-	  var _len$jscomp$0 = arguments.length;
-	  var args$jscomp$0 = Array(_len$jscomp$0);
-	  var _key$jscomp$0 = 0;
-	  for (; _key$jscomp$0 < _len$jscomp$0; _key$jscomp$0++) {
-		args$jscomp$0[_key$jscomp$0] = arguments[_key$jscomp$0];
-	  }
-	  var collect$jscomp$0 = this.handle.apply(this, args$jscomp$0);
-	  if (collect$jscomp$0 && this.filter.apply(this, args$jscomp$0.concat([this.collected]))) {
-		this.collected.set(collect$jscomp$0.key, collect$jscomp$0.value);
-		this.emit("collect", collect$jscomp$0.value, this);
-		this.emit.apply(this, ["fullCollect"].concat(args$jscomp$0, [this]));
-		if (this._idletimeout) {
-		  this.client.clearTimeout(this._idletimeout);
-		  this._idletimeout = this.client.setTimeout(function() {
-			return _this$jscomp$0.stop("idle");
-		  }, this.options.idle);
-		}
-	  }
-	  var post$jscomp$0 = this.postCheck.apply(this, args$jscomp$0);
-	  if (post$jscomp$0) {
-		this.stop(post$jscomp$0);
-	  }
-	}
+  _handle(...args) {
+    const collect = this.handle(...args);
+    if (collect && this.filter(...args, this.collected)) {
+      this.collected.set(collect.key, collect.value);
+
+      /**
+       * Emitted whenever an element is collected.
+       * @event Collector#collect
+       * @param {*} element The element that got collected
+       * @param {Collector} collector The collector
+       */
+      this.emit('collect', collect.value, this);
+
+      /**
+       * Emitted whenever an element is collected.
+       * @event Collector#fullCollect
+       * @param {...*} args The arguments emitted by the listener
+       * @private
+       */
+      this.emit('fullCollect', ...args, this);
+
+      if (this._idletimeout) {
+        this.client.clearTimeout(this._idletimeout);
+        this._idletimeout = this.client.setTimeout(() => this.stop('idle'), this.options.idle);
+      }
+    }
+
+    const post = this.postCheck(...args);
+    if (post) this.stop(post);
+  }
 
   /**
    * Return a promise that resolves with the next collected element;
@@ -152,7 +155,7 @@ class Collector extends EventEmitter {
    * @param {string} [reason='user'] The reason this collector is ending
    * @emits Collector#end
    */
-  stop(reason) { if(reason === undefined) reason = 'user';
+  stop(reason = 'user') {
     if (this.ended) return;
 
     if (this._timeout) {

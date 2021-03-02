@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * The base opus encoding engine.
  * @private
@@ -11,17 +9,7 @@ class BaseOpus {
    * @param {boolean} [options.fec=false] Whether to enable forward error correction
    * @param {number} [options.plp=0] The expected packet loss percentage
    */
-  constructor(obj) {
-    // { bitrate = 48, fec = false, plp = 0 } = {}
-    var _obj = obj;
-	var _obj$bitrate = _obj.bitrate;
-	var bitrate = _obj$bitrate === undefined ? 48 : _obj$bitrate;
-	var _obj$fec = _obj.fec;
-	var fec = _obj$fec === undefined ? false : _obj$fec;
-	var _obj$plp = _obj.plp;
-	var plp = _obj$plp === undefined ? 0 : _obj$plp;
-
-	
+  constructor({ bitrate = 48, fec = false, plp = 0 } = {}) {
     this.ctl = {
       BITRATE: 4002,
       FEC: 4012,

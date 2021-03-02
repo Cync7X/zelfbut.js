@@ -1,5 +1,3 @@
-'use strict';
-
 const EventEmitter = require('events');
 
 /**
@@ -7,11 +5,9 @@ const EventEmitter = require('events');
  * @extends {EventEmitter}
  */
 class VolumeInterface extends EventEmitter {
-  constructor(options) { // { volume = 1 } = {}
+  constructor({ volume = 1 } = {}) {
     super();
-	var vol = ((options || {}).volume);
-	if(vol === undefined) vol = 1;
-    this.setVolume(vol);
+    this.setVolume(volume);
   }
 
   /**

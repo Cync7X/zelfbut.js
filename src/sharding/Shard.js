@@ -1,5 +1,3 @@
-'use strict';
-
 const childProcess = require('child_process');
 const EventEmitter = require('events');
 const path = require('path');
@@ -14,7 +12,7 @@ class Shard extends EventEmitter {
    * @param {number} id The ID of this shard
    * @param {Array} [args=[]] Command line arguments to pass to the script
    */
-  constructor(manager, id, args) { args = args || [];
+  constructor(manager, id, args = []) {
     super();
     /**
      * Manager that created the shard
@@ -70,11 +68,7 @@ class Shard extends EventEmitter {
    * @param {Array} [execArgv=this.manager.execArgv] Command line arguments to pass to the process executable
    * @returns {ChildProcess}
    */
-  spawn(args, execArgv) {
-	// args = this.manager.args, execArgv = this.manager.execArgv
-	if(args === undefined) this.manager.args;
-	if(execArgv === undefined) this.manager.execArgv;
-	
+  spawn(args = this.manager.args, execArgv = this.manager.execArgv) {
     this.process = childProcess.fork(path.resolve(this.manager.file), args, {
       env: this.env, execArgv,
     })
@@ -110,7 +104,7 @@ class Shard extends EventEmitter {
    * @param {number} [delay=500] How long to wait between killing the process and restarting it (in milliseconds)
    * @returns {Promise<ChildProcess>}
    */
-  respawn(delay) { if(delay === undefined) delay = 500;
+  respawn(delay = 500) {
     this.kill();
     if (delay > 0) return Util.delayFor(delay).then(() => this.spawn());
     return this.spawn();
@@ -269,7 +263,7 @@ class Shard extends EventEmitter {
    * @param {boolean} [respawn=this.manager.respawn] Whether to spawn the shard again
    * @private
    */
-  _handleExit(respawn) {if(respawn===undefined) respawn = this.manager.respawn;
+  _handleExit(respawn = this.manager.respawn) {
     /**
      * Emitted upon the shard's child process exiting.
      * @event Shard#death

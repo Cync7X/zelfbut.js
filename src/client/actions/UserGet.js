@@ -1,5 +1,3 @@
-'use strict';
-
 const Action = require('./Action');
 
 class UserGetAction extends Action {

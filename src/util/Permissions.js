@@ -1,5 +1,3 @@
-'use strict';
-
 const BitField = require('./BitField');
 const util = require('util');
 
@@ -57,7 +55,7 @@ class Permissions extends BitField {
    * @param {boolean} [checkAdmin=true] Whether to allow the administrator permission to override
    * @returns {boolean}
    */
-  any(permission, checkAdmin) { if(checkAdmin === undefined) checkAdmin = true;
+  any(permission, checkAdmin = true) {
     return (checkAdmin && super.has(this.constructor.FLAGS.ADMINISTRATOR)) || super.any(permission);
   }
 
@@ -67,7 +65,7 @@ class Permissions extends BitField {
    * @param {boolean} [checkAdmin=true] Whether to allow the administrator permission to override
    * @returns {boolean}
    */
-  has(permission, checkAdmin) { if(checkAdmin === undefined) checkAdmin = true;
+  has(permission, checkAdmin = true) {
     return (checkAdmin && super.has(this.constructor.FLAGS.ADMINISTRATOR)) || super.has(permission);
   }
 
@@ -79,7 +77,7 @@ class Permissions extends BitField {
    * @see {@link Permissions#has}
    * @deprecated
    */
-  hasPermission(permission, explicit) {
+  hasPermission(permission, explicit = false) {
     return this.has(permission, !explicit);
   }
 
@@ -91,7 +89,7 @@ class Permissions extends BitField {
    * @see {@link Permissions#has}
    * @deprecated
    */
-  hasPermissions(permissions, explicit) {
+  hasPermissions(permissions, explicit = false) {
     return this.has(permissions, !explicit);
   }
 
@@ -103,7 +101,7 @@ class Permissions extends BitField {
    * @see {@link Permissions#missing}
    * @deprecated
    */
-  missingPermissions(permissions, explicit) {
+  missingPermissions(permissions, explicit = false) {
     return this.missing(permissions, !explicit);
   }
 }
@@ -151,7 +149,7 @@ class Permissions extends BitField {
  * - `MANAGE_WEBHOOKS`
  * - `MANAGE_EMOJIS`
  * @type {Object}
- * @see {@link https://discord.com/developers/docs/topics/permissions}
+ * @see {@link https://discordapp.com/developers/docs/topics/permissions}
  */
 Permissions.FLAGS = {
   CREATE_INSTANT_INVITE: 1 << 0,

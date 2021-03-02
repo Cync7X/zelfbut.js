@@ -1,5 +1,3 @@
-'use strict';
-
 const Snowflake = require('../util/Snowflake');
 const Permissions = require('../util/Permissions');
 const util = require('util');
@@ -169,7 +167,7 @@ class Role {
    *   console.log('This role can\'t ban members');
    * }
    */
-  hasPermission(permission, explicit, checkAdmin) {
+  hasPermission(permission, explicit = false, checkAdmin) {
     return new Permissions(this.permissions).has(
       permission, typeof checkAdmin !== 'undefined' ? checkAdmin : !explicit
     );
@@ -182,7 +180,7 @@ class Role {
    * @returns {boolean}
    * @deprecated
    */
-  hasPermissions(permissions, explicit) {
+  hasPermissions(permissions, explicit = false) {
     return new Permissions(this.permissions).has(permissions, !explicit);
   }
 

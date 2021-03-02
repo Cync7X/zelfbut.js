@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Represents an attachment in a message.
  * @param {BufferResolvable|Stream} file The file

@@ -1,5 +1,3 @@
-'use strict';
-
 const Attachment = require('./Attachment');
 const MessageEmbed = require('./MessageEmbed');
 const util = require('../util/Util');
@@ -10,7 +8,7 @@ let ClientDataResolver;
  * @param {Object} [data] Data to set in the rich embed
  */
 class RichEmbed {
-  constructor(data) { data = data || {};
+  constructor(data = {}) {
     /**
      * Title for this Embed
      * @type {string}
@@ -146,7 +144,7 @@ class RichEmbed {
    * @param {Date|number} [timestamp=Date.now()] The timestamp or date
    * @returns {RichEmbed} This embed
    */
-  setTimestamp(timestamp) { if(timestamp === undefined) timestamp = Date.now();
+  setTimestamp(timestamp = Date.now()) {
     if (timestamp instanceof Date) timestamp = timestamp.getTime();
     this.timestamp = timestamp;
     return this;
@@ -159,7 +157,7 @@ class RichEmbed {
    * @param {boolean} [inline=false] Set the field to display inline
    * @returns {RichEmbed} This embed
    */
-  addField(name, value, inline) { if(inline === undefined) inline = false;
+  addField(name, value, inline = false) {
     if (this.fields.length >= 25) throw new RangeError('RichEmbeds may not exceed 25 fields.');
     this.fields.push(this.constructor.normalizeField(name, value, inline));
     return this;
@@ -170,7 +168,7 @@ class RichEmbed {
    * @param {boolean} [inline=false] Set the field to display inline
    * @returns {RichEmbed} This embed
    */
-  addBlankField(inline) { if(inline === undefined) inline = false;
+  addBlankField(inline = false) {
     return this.addField('\u200B', '\u200B', inline);
   }
 
@@ -195,41 +193,15 @@ class RichEmbed {
    * @param {...EmbedFieldData} [fields] The replacing field objects
    * @returns {RichEmbed}
    */
-  spliceFields(index$jscomp$54, deleteCount$jscomp$0) {
-	  function _toConsumableArray(arr$jscomp$8) {
-		  if (Array.isArray(arr$jscomp$8)) {
-			var i$jscomp$3 = 0;
-			var arr2$jscomp$0 = Array(arr$jscomp$8.length);
-			for (; i$jscomp$3 < arr$jscomp$8.length; i$jscomp$3++) {
-			  arr2$jscomp$0[i$jscomp$3] = arr$jscomp$8[i$jscomp$3];
-			}
-			return arr2$jscomp$0;
-		  } else {
-			return Array.from(arr$jscomp$8);
-		  }
-		}
-	  
-	  var _this$jscomp$0 = this;
-	  var _len$jscomp$0 = arguments.length;
-	  var fields$jscomp$0 = Array(_len$jscomp$0 > 2 ? _len$jscomp$0 - 2 : 0);
-	  var _key$jscomp$0 = 2;
-	  for (; _key$jscomp$0 < _len$jscomp$0; _key$jscomp$0++) {
-		fields$jscomp$0[_key$jscomp$0 - 2] = arguments[_key$jscomp$0];
-	  }
-	  if (fields$jscomp$0) {
-		var _fields$jscomp$0;
-		var mapper$jscomp$0 = function mapper$jscomp$1(_ref$jscomp$0) {
-		  var name$jscomp$64 = _ref$jscomp$0.name;
-		  var value$jscomp$84 = _ref$jscomp$0.value;
-		  var inline$jscomp$0 = _ref$jscomp$0.inline;
-		  return _this$jscomp$0.constructor.normalizeField(name$jscomp$64, value$jscomp$84, inline$jscomp$0);
-		};
-		(_fields$jscomp$0 = this.fields).splice.apply(_fields$jscomp$0, [index$jscomp$54, deleteCount$jscomp$0].concat(_toConsumableArray(fields$jscomp$0.map(mapper$jscomp$0))));
-	  } else {
-		this.fields.splice(index$jscomp$54, deleteCount$jscomp$0);
-	  }
-	  return this;
-	}
+  spliceFields(index, deleteCount, ...fields) {
+    if (fields) {
+      const mapper = ({ name, value, inline }) => this.constructor.normalizeField(name, value, inline);
+      this.fields.splice(index, deleteCount, ...fields.map(mapper));
+    } else {
+      this.fields.splice(index, deleteCount);
+    }
+    return this;
+  }
 
   /**
    * Set the thumbnail of this embed.
@@ -345,7 +317,7 @@ class RichEmbed {
    * @param {boolean} [inline=false] Set the field to display inline
    * @returns {EmbedField}
    */
-  static normalizeField(name, value, inline) { if(inline === undefined) inline = false;
+  static normalizeField(name, value, inline = false) {
     name = util.resolveString(name);
     if (name.length > 256) throw new RangeError('RichEmbed field names may not exceed 256 characters.');
     if (!/\S/.test(name)) throw new RangeError('RichEmbed field names may not be empty.');

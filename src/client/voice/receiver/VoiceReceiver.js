@@ -1,5 +1,3 @@
-'use strict';
-
 const EventEmitter = require('events').EventEmitter;
 const secretbox = require('../util/Secretbox');
 const Readable = require('./VoiceReadable');
@@ -78,18 +76,15 @@ class VoiceReceiver extends EventEmitter {
    */
   destroy() {
     this.voiceConnection.sockets.udp.socket.removeListener('message', this._listener);
-    for (const _arr of this.pcmStreams) {
-      const id = _arr[0], stream = _arr[1];
+    for (const [id, stream] of this.pcmStreams) {
       stream._push(null);
       this.pcmStreams.delete(id);
     }
-    for (const _arr of this.opusStreams) {
-      const id = _arr[0], stream = _arr[1];
+    for (const [id, stream] of this.opusStreams) {
       stream._push(null);
       this.opusStreams.delete(id);
     }
-    for (const _arr of this.opusEncoders) {
-      const id = _arr[0], encoder = _arr[1];
+    for (const [id, encoder] of this.opusEncoders) {
       encoder.destroy();
       this.opusEncoders.delete(id);
     }
@@ -196,12 +191,8 @@ class VoiceReceiver extends EventEmitter {
     this.emit('opus', user, data);
     if (this.listenerCount('pcm') > 0 || this.pcmStreams.size > 0) {
       if (!this.opusEncoders.get(user.id)) this.opusEncoders.set(user.id, OpusEncoders.fetch());
-      const _obj = VoiceReceiver._tryDecode(this.opusEncoders.get(user.id), data);
-      var _obj2 = _obj;
-		var pcm = _obj2.pcm;
-		var error = _obj2.error;
-
-	  if (error) {
+      const { pcm, error } = VoiceReceiver._tryDecode(this.opusEncoders.get(user.id), data);
+      if (error) {
         this.emit('warn', 'decode', `Failed to decode packet voice to PCM because: ${error.message}`);
         return;
       }

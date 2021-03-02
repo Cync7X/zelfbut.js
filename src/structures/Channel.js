@@ -1,5 +1,3 @@
-'use strict';
-
 const Snowflake = require('../util/Snowflake');
 
 /**

@@ -1,5 +1,3 @@
-'use strict';
-
 const TextBasedChannel = require('./interfaces/TextBasedChannel');
 const Constants = require('../util/Constants');
 const Presence = require('./Presence').Presence;
@@ -72,8 +70,6 @@ class User {
      * @type {?Message}
      */
     this.lastMessage = null;
-	
-	this.typing = { since: null, channel: null };
   }
 
   patch(data) {

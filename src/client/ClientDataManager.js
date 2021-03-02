@@ -1,5 +1,3 @@
-'use strict';
-
 const Constants = require('../util/Constants');
 const Util = require('../util/Util');
 const Guild = require('../structures/Guild');
@@ -43,7 +41,7 @@ class ClientDataManager {
     return guild;
   }
 
-  newUser(data, cache) { if(cache===undefined)cache = true;
+  newUser(data, cache = true) {
     if (this.client.users.has(data.id)) return this.client.users.get(data.id);
     const user = new User(this.client, data);
     if (cache) this.client.users.set(user.id, user);

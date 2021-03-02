@@ -1,6 +1,4 @@
-'use strict';
-
-const request = require('superagent');
+const snekfetch = require('snekfetch');
 const Constants = require('../../util/Constants');
 
 class APIRequest {
@@ -17,13 +15,17 @@ class APIRequest {
   }
 
   getRoute(url) {
-    let route = url.split('?')[0];
-    if (route.includes('/channels/') || route.includes('/guilds/')) {
-      const startInd = route.includes('/channels/') ? route.indexOf('/channels/') : route.indexOf('/guilds/');
-      const majorID = route.substring(startInd).split('/')[2];
-      route = route.replace(/(\d{8,})/g, ':id').replace(':id', majorID);
+    const route = url.split('?')[0].split('/');
+    const routeBucket = [];
+    for (let i = 0; i < route.length; i++) {
+      // Reactions routes and sub-routes all share the same bucket
+      if (route[i - 1] === 'reactions') break;
+      // Literal IDs should only be taken account if they are the Major ID (the Channel/Guild ID)
+      if (/\d{16,19}/g.test(route[i]) && !/channels|guilds/.test(route[i - 1])) routeBucket.push(':id');
+      // All other parts of the route should be considered as part of the bucket identifier
+      else routeBucket.push(route[i]);
     }
-    return route;
+    return routeBucket.join('/');
   }
 
   getAuth() {
@@ -37,18 +39,17 @@ class APIRequest {
 
   gen() {
     const API = `${this.client.options.http.host}/api/v${this.client.options.http.version}`;
-    const apiRequest = request[this.method](`${API}${this.path}`);
-    if (this.auth) apiRequest.set('authorization', this.getAuth());
-	if (this.reason) apiRequest.set('X-Audit-Log-Reason', encodeURIComponent(this.reason));
-    if (this.file && this.file.file) {
-      apiRequest.attach('file', this.file.file, this.file.name);
-      this.data = this.data || {};
-      apiRequest.field('payload_json', JSON.stringify(this.data));
+    const request = snekfetch[this.method](`${API}${this.path}`);
+    if (this.auth) request.set('Authorization', this.getAuth());
+    if (this.reason) request.set('X-Audit-Log-Reason', encodeURIComponent(this.reason));
+    if (!this.rest.client.browser) request.set('User-Agent', this.rest.userAgentManager.userAgent);
+    if (this.files) {
+      for (const file of this.files) if (file && file.file) request.attach(file.name, file.file, file.name);
+      if (typeof this.data !== 'undefined') request.attach('payload_json', JSON.stringify(this.data));
     } else if (this.data) {
-      apiRequest.send(this.data);
+      request.send(this.data);
     }
-    if (!this.rest.client.browser) apiRequest.set('User-Agent', this.rest.userAgentManager.userAgent);
-	return apiRequest;
+    return request;
   }
 }
 

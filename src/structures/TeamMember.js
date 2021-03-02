@@ -1,6 +1,4 @@
-'use strict';
-
-const MembershipStates = require('../util/Constants').MembershipStates;
+const { MembershipStates } = require('../util/Constants');
 
 /**
  * Represents a Client OAuth2 Application Team Member.

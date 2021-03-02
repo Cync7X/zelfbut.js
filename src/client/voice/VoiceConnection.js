@@ -1,5 +1,3 @@
-'use strict';
-
 const VoiceWebSocket = require('./VoiceWebSocket');
 const VoiceUDP = require('./VoiceUDPClient');
 const Util = require('../../util/Util');
@@ -8,7 +6,7 @@ const AudioPlayer = require('./player/AudioPlayer');
 const VoiceReceiver = require('./receiver/VoiceReceiver');
 const SingleSilence = require('./util/SingleSilence');
 const EventEmitter = require('events').EventEmitter;
-const Prism = require('../../../prism-media/src');
+const Prism = require('prism-media');
 
 // The delay between packets when a user is considered to have stopped speaking
 // https://github.com/discordjs/discord.js/issues/3524#issuecomment-540373200
@@ -164,7 +162,7 @@ class VoiceConnection extends EventEmitter {
    * Sends a request to the main gateway to join a voice channel.
    * @param {Object} [options] The options to provide
    */
-  sendVoiceStateUpdate(options) { options = options || {};
+  sendVoiceStateUpdate(options = {}) {
     options = Util.mergeDefault({
       guild_id: this.channel.guild.id,
       channel_id: this.channel.id,
@@ -240,10 +238,7 @@ class VoiceConnection extends EventEmitter {
    * @private
    */
   checkAuthenticated() {
-    var _authentication = this.authentication;
-	var token = _authentication.token;
-	var endpoint = _authentication.endpoint;
-	var sessionID = _authentication.sessionID;;
+    const { token, endpoint, sessionID } = this.authentication;
 
     if (token && endpoint && sessionID) {
       this.client.clearTimeout(this.connectTimeout);
@@ -353,9 +348,7 @@ class VoiceConnection extends EventEmitter {
    * @private
    */
   cleanup() {
-    var _sockets = this.sockets;
-	var ws = _sockets.ws;
-	var udp = _sockets.udp;
+    const { ws, udp } = this.sockets;
 
     if (ws) {
       ws.removeAllListeners('error');
@@ -387,9 +380,7 @@ class VoiceConnection extends EventEmitter {
     this.sockets.ws = new VoiceWebSocket(this);
     this.sockets.udp = new VoiceUDP(this);
 
-    var _sockets = this.sockets;
-	var ws = _sockets.ws;
-	var udp = _sockets.udp;
+    const { ws, udp } = this.sockets;
 
     ws.on('error', err => this.emit('error', err));
     udp.on('error', err => this.emit('error', err));
@@ -403,12 +394,7 @@ class VoiceConnection extends EventEmitter {
    * @param {Object} data The received data
    * @private
    */
-  onReady(options) {
-	var _options = options;
-	var port = _options.port;
-	var ssrc = _options.ssrc;
-	var ip = _options.ip;
-
+  onReady({ port, ssrc, ip }) {
     this.authentication.port = port;
     this.authentication.ssrc = ssrc;
     this.sockets.udp.createUDPSocket(ip);
@@ -447,10 +433,7 @@ class VoiceConnection extends EventEmitter {
    * @param {Object} data The speaking data
    * @private
    */
-  onStartSpeaking(options) {
-	var _options = options;
-	var user_id = _options.user_id;
-	var ssrc = _options.ssrc;
+  onStartSpeaking({ user_id, ssrc }) {
     this.ssrcMap.set(+ssrc, user_id);
   }
 
@@ -459,10 +442,7 @@ class VoiceConnection extends EventEmitter {
    * @param {Object} data The received data
    * @private
    */
-  onSpeaking(options) {
-	var _options = options;
-	var user_id = _options.user_id;
-	var speaking = _options.speaking;
+  onSpeaking({ user_id, speaking }) {
     const guild = this.channel.guild;
     const user = this.client.users.get(user_id);
     if (!speaking) {

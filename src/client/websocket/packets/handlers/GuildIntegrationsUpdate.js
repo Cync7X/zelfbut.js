@@ -1,7 +1,5 @@
-'use strict';
-
 const AbstractHandler = require('./AbstractHandler');
-const Events = require('../../../../util/Constants').Events;
+const { Events } = require('../../../../util/Constants');
 
 class GuildIntegrationsHandler extends AbstractHandler {
   handle(packet) {

@@ -1,5 +1,3 @@
-'use strict';
-
 const Silence = require('./Silence');
 
 /**

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Represents a Secret Key used in encryption over voice.
  * @private

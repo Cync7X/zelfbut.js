@@ -1,5 +1,3 @@
-'use strict';
-
 const EventEmitter = require('events');
 const path = require('path');
 const Util = require('../util/Util');
@@ -131,7 +129,7 @@ class Webhook extends EventEmitter {
    * @property {boolean} [tts=false] Whether or not the message should be spoken aloud
    * @property {string} [nonce=''] The nonce for the message
    * @property {Array<RichEmbed|Object>} [embeds] An array of embeds for the message
-   * (see [here](https://discord.com/developers/docs/resources/channel#embed-object) for more details)
+   * (see [here](https://discordapp.com/developers/docs/resources/channel#embed-object) for more details)
    * @property {boolean} [disableEveryone=this.client.options.disableEveryone] Whether or not @everyone and @here
    * should be replaced with plain-text
    * @property {FileOptions|BufferResolvable|Attachment} [file] A file to send with the message **(deprecated)**
@@ -155,7 +153,7 @@ class Webhook extends EventEmitter {
    * @example
    * // Send a remote file
    * webhook.send({
-   *   files: ['https://cdn.discord.com/icons/222078108977594368/6e1019b3179d71046e463a75915e7244.png?size=2048']
+   *   files: ['https://cdn.discordapp.com/icons/222078108977594368/6e1019b3179d71046e463a75915e7244.png?size=2048']
    * })
    *   .then(console.log)
    *   .catch(console.error);
@@ -198,10 +196,7 @@ class Webhook extends EventEmitter {
 
     if (content) {
       content = this.client.resolver.resolveString(content);
-      var _options = options;
-		var split = _options.split;
-		var code = _options.code;
-		var disableEveryone = _options.disableEveryone;
+      let { split, code, disableEveryone } = options;
       if (split && typeof split !== 'object') split = {};
       if (typeof code !== 'undefined' && (typeof code !== 'boolean' || code === true)) {
         content = Util.escapeMarkdown(content, true);
@@ -228,25 +223,7 @@ class Webhook extends EventEmitter {
       for (const embed of options.embeds) {
         if (embed.file) files.push(embed.file);
       }
-	  var _options$files;
-		function _toConsumableArray(arr) {
-		  if (Array.isArray(arr)) {
-			var i = 0;
-			var arr2 = Array(arr.length);
-			for (; i < arr.length; i++) {
-			  arr2[i] = arr[i];
-			}
-			return arr2;
-		  } else {
-			return Array.from(arr);
-		  }
-		}
-		
-		// 노드5에서 ...[1, 2, 3] 문법이 부분적으로 될 줄이양;;;
-		if (options.files) {
-		  (_options$files = options.files).push.apply(_options$files, _toConsumableArray(files));
-		}
-      // if (options.files) options.files.push(...files);
+      if (options.files) options.files.push(...files);
       else options.files = files;
     }
 
@@ -295,7 +272,7 @@ class Webhook extends EventEmitter {
    *  .then(message => console.log(`Sent message: ${message.content}`))
    *  .catch(console.error);
    */
-  sendMessage(content, options) { options = options || {};
+  sendMessage(content, options = {}) {
     return this.send(content, options);
   }
 
@@ -308,7 +285,7 @@ class Webhook extends EventEmitter {
    * @returns {Promise<Message>}
    * @deprecated
    */
-  sendFile(attachment, name, content, options) { options = options || {};
+  sendFile(attachment, name, content, options = {}) {
     return this.send(content, Object.assign(options, { file: { attachment, name } }));
   }
 
@@ -320,7 +297,7 @@ class Webhook extends EventEmitter {
    * @returns {Promise<Message|Message[]>}
    * @deprecated
    */
-  sendCode(lang, content, options) { options = options || {};
+  sendCode(lang, content, options = {}) {
     return this.send(content, Object.assign(options, { code: lang }));
   }
 
@@ -361,7 +338,7 @@ class Webhook extends EventEmitter {
    * Alternatively a reason to edit, if using options as first parameter.
    * @returns {Promise<Webhook>}
    */
-  edit(nameOrOptions, avatarOrReason) { nameOrOptions = nameOrOptions || this.name;
+  edit(nameOrOptions = this.name, avatarOrReason) {
     if (typeof nameOrOptions !== 'object') {
       process.emitWarning('Webhook#edit: Use options object instead of separate parameters.');
       nameOrOptions = {

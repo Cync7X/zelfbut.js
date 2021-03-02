@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Represents an error from the Discord API.
  * @extends Error
@@ -37,7 +35,7 @@ class DiscordAPIError extends Error {
    * @returns {string[]}
    * @private
    */
-  static flattenErrors(obj, key) { if(key===undefined) key = '';
+  static flattenErrors(obj, key = '') {
     let messages = [];
 
     for (const k of Object.keys(obj)) {

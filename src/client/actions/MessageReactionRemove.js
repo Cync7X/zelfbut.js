@@ -1,5 +1,3 @@
-'use strict';
-
 const Action = require('./Action');
 const Constants = require('../../util/Constants');
 
@@ -18,7 +16,7 @@ class MessageReactionRemove extends Action {
     const channel = this.client.channels.get(data.channel_id);
     if (!channel || channel.type === 'voice') return false;
     // Verify message
-    const message = this.getMessage(data, channel);
+    const message = channel.messages.get(data.message_id);
     if (!message) return false;
     if (!data.emoji) return false;
     // Verify reaction

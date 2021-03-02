@@ -1,5 +1,3 @@
-'use strict';
-
 const User = require('./User');
 const Collection = require('../util/Collection');
 const ClientUserSettings = require('./ClientUserSettings');
@@ -296,10 +294,7 @@ class ClientUser extends User {
    *   .then(presence => console.log(`Activity set to ${presence.game ? presence.game.name : 'none'}`))
    *   .catch(console.error);
    */
-  setActivity(name, obj) { obj = obj || {};
-	var _obj = obj;
-	var url = _obj.url;
-	var type = _obj.type;
+  setActivity(name, { url, type } = {}) {
     if (!name) return this.setPresence({ game: null });
     return this.setPresence({
       game: { name, type, url },
@@ -336,7 +331,7 @@ class ClientUser extends User {
    *   .then(console.log)
    *   .catch(console.error);
    */
-  fetchMentions(options) { options = options || {};
+  fetchMentions(options = {}) {
     return this.client.rest.methods.fetchMentions(options);
   }
 
@@ -372,7 +367,7 @@ class ClientUser extends User {
    * @param {BufferResolvable|Base64Resolvable} [icon=null] The icon for the guild
    * @returns {Promise<Guild>} The guild that was created
    */
-  createGuild(name, region, icon) {if(icon===undefined)icon=null;
+  createGuild(name, region, icon = null) {
     if (typeof icon === 'string' && icon.startsWith('data:')) {
       return this.client.rest.methods.createGuild({ name, icon, region });
     } else {

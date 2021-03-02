@@ -1,5 +1,3 @@
-'use strict';
-
 const browser = typeof window !== 'undefined';
 const EventEmitter = require('events');
 const Constants = require('../../util/Constants');
@@ -244,10 +242,7 @@ class WebSocketConnection extends EventEmitter {
    * @param {boolean} [force=false] Whether or not to force a new connection even if one already exists
    * @returns {boolean}
    */
-  connect(gateway, after, force) {
-	if(force===undefined)force=false;
-	gateway=gateway||this.gateway;
-	if(after===undefined)after=0;
+  connect(gateway = this.gateway, after = 0, force = false) {
     if (after) return this.client.setTimeout(() => this.connect(gateway, 0, force), after); // eslint-disable-line
     if (this.ws && !force) {
       this.debug('WebSocket connection already exists');
@@ -472,9 +467,7 @@ class WebSocketConnection extends EventEmitter {
     const d = Object.assign({ token: this.client.token }, this.client.options.ws);
 
     // Sharding stuff
-    var _client$options = this.client.options;
-	var shardId = _client$options.shardId;
-	var shardCount = _client$options.shardCount;
+    const { shardId, shardCount } = this.client.options;
     if (shardCount > 0) d.shard = [Number(shardId), Number(shardCount)];
 
     // Send the payload

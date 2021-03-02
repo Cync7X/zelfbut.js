@@ -1,8 +1,6 @@
-'use strict';
-
 const path = require('path');
 const fs = require('fs');
-const superagent = require('superagent');
+const snekfetch = require('snekfetch');
 
 const Constants = require('../util/Constants');
 const convertToBuffer = require('../util/Util').convertToBuffer;
@@ -254,7 +252,7 @@ class ClientDataResolver {
 
     if (typeof resource === 'string') {
       if (/^https?:\/\//.test(resource)) {
-        return superagent.get(resource).then(res => res.body instanceof Buffer ? res.body : Buffer.from(res.text));
+        return snekfetch.get(resource).then(res => res.body instanceof Buffer ? res.body : Buffer.from(res.text));
       }
       return new Promise((resolve, reject) => {
         const file = path.resolve(resource);

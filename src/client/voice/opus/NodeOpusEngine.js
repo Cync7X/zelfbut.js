@@ -1,5 +1,3 @@
-'use strict';
-
 const OpusEngine = require('./BaseOpusEngine');
 
 class NodeOpusEngine extends OpusEngine {

@@ -1,5 +1,3 @@
-'use strict';
-
 const Collector = require('./interfaces/Collector');
 const Collection = require('../util/Collection');
 
@@ -20,7 +18,7 @@ class ReactionCollector extends Collector {
    * @param {CollectorFilter} filter The filter to apply to this collector
    * @param {ReactionCollectorOptions} [options={}] The options to apply to this collector
    */
-  constructor(message, filter, options) { options = options || {};
+  constructor(message, filter, options = {}) {
     super(message.client, filter, options);
 
     /**

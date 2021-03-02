@@ -1,8 +1,6 @@
-'use strict';
-
 const Action = require('./Action');
 const Invite = require('../../structures/Invite');
-const Events = require('../../util/Constants').Events;
+const { Events } = require('../../util/Constants');
 
 class InviteDeleteAction extends Action {
   handle(data) {

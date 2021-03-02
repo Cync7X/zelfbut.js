@@ -1,5 +1,3 @@
-'use strict';
-
 const PartialGuild = require('./PartialGuild');
 const PartialGuildChannel = require('./PartialGuildChannel');
 const Constants = require('../util/Constants');

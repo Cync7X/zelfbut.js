@@ -1,5 +1,3 @@
-'use strict';
-
 const Readable = require('stream').Readable;
 
 class VoiceReadable extends Readable {

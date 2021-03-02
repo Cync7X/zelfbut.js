@@ -1,6 +1,4 @@
-'use strict';
-
-const basename = require('path').basename;
+const { basename } = require('path');
 
 /**
  * Represents an attachment in a message.

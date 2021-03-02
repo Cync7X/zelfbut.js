@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * The information account for an integration
  * @typedef {Object} IntegrationAccount

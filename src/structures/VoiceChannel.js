@@ -1,5 +1,3 @@
-'use strict';
-
 const GuildChannel = require('./GuildChannel');
 const Collection = require('../util/Collection');
 const Permissions = require('../util/Permissions');

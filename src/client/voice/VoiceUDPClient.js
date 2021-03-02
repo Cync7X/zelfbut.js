@@ -1,5 +1,3 @@
-'use strict';
-
 const udp = require('dgram');
 const Constants = require('../../util/Constants');
 const EventEmitter = require('events').EventEmitter;

@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Represents a Discord voice region for guilds.
  */

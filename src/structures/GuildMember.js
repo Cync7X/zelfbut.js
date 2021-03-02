@@ -1,10 +1,8 @@
-'use strict';
-
 const TextBasedChannel = require('./interfaces/TextBasedChannel');
 const Role = require('./Role');
 const Permissions = require('../util/Permissions');
 const Collection = require('../util/Collection');
-const Presence = require('./Presence').Presence;
+const { Presence } = require('./Presence');
 const util = require('util');
 
 /**
@@ -339,7 +337,7 @@ class GuildMember {
    * (takes priority over `explicit`)
    * @returns {boolean}
    */
-  hasPermission(permission, explicit, checkAdmin, checkOwner) {
+  hasPermission(permission, explicit = false, checkAdmin, checkOwner) {
     if (typeof checkAdmin === 'undefined') checkAdmin = !explicit;
     if (typeof checkOwner === 'undefined') checkOwner = !explicit;
     if (checkOwner && this.user.id === this.guild.ownerID) return true;
@@ -353,7 +351,7 @@ class GuildMember {
    * @returns {boolean}
    * @deprecated
    */
-  hasPermissions(permissions, explicit) {
+  hasPermissions(permissions, explicit = false) {
     if (!explicit && this.user.id === this.guild.ownerID) return true;
     return this.hasPermission(permissions, explicit);
   }
@@ -364,7 +362,7 @@ class GuildMember {
    * @param {boolean} [explicit=false] Whether to require the member to explicitly have the exact permissions
    * @returns {PermissionResolvable}
    */
-  missingPermissions(permissions, explicit) {
+  missingPermissions(permissions, explicit = false) {
     if (!(permissions instanceof Array)) permissions = [permissions];
     return this.permissions.missing(permissions, explicit);
   }
@@ -396,10 +394,6 @@ class GuildMember {
    */
   edit(data, reason) {
     return this.client.rest.methods.updateGuildMember(this, data, reason);
-  }
-  
-  get server() {
-	  return this.guild;
   }
 
   /**

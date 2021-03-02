@@ -1,5 +1,3 @@
-'use strict';
-
 const list = [
   require('./DiscordJsOpusEngine'),
   require('./NodeOpusEngine'),

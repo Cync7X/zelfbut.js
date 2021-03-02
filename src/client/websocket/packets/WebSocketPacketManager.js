@@ -1,5 +1,3 @@
-'use strict';
-
 const Constants = require('../../../util/Constants');
 
 const BeforeReadyWhitelist = [
@@ -77,7 +75,7 @@ class WebSocketPacketManager {
     });
   }
 
-  handle(packet, queue) {
+  handle(packet, queue = false) {
     if (packet.op === Constants.OPCodes.HEARTBEAT_ACK) {
       this.ws.client._pong(this.ws.client._pingTimestamp);
       this.ws.lastHeartbeatAck = true;

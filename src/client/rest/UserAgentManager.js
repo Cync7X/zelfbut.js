@@ -1,19 +1,25 @@
-"use strict";
-
-const Constants = require("../../util/Constants");
+const Constants = require('../../util/Constants');
 
 class UserAgentManager {
   constructor() {
-    this.build();
+    this.build(this.constructor.DEFAULT);
   }
 
-  set(options) {
-    var _options = options;
-    this.build();
+  set({ url, version } = {}) {
+    this.build({
+      url: url || this.constructor.DFEAULT.url,
+      version: version || this.constructor.DEFAULT.version,
+    });
   }
 
-  build() {
-    this.userAgent = `Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) discord/0.0.10 Chrome/88.0.4324.192 Electron/7.1.11 Safari/537.36`;
+  build(ua) {
+    this.userAgent = `DiscordBot (${ua.url}, ${ua.version}) Node.js/${process.version}`;
   }
 }
+
+UserAgentManager.DEFAULT = {
+  url: Constants.Package.homepage.split('#')[0],
+  version: Constants.Package.version,
+};
+
 module.exports = UserAgentManager;

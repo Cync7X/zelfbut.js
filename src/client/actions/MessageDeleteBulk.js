@@ -1,5 +1,3 @@
-'use strict';
-
 const Action = require('./Action');
 const Collection = require('../../util/Collection');
 const Constants = require('../../util/Constants');

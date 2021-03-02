@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 const Message = require('../Message');
 const MessageCollector = require('../MessageCollector');
@@ -46,7 +44,7 @@ class TextBasedChannel {
    * @property {boolean} [tts=false] Whether or not the message should be spoken aloud
    * @property {string} [nonce=''] The nonce for the message
    * @property {RichEmbed|Object} [embed] An embed for the message
-   * (see [here](https://discord.com/developers/docs/resources/channel#embed-object) for more details)
+   * (see [here](https://discordapp.com/developers/docs/resources/channel#embed-object) for more details)
    * @property {boolean} [disableEveryone=this.client.options.disableEveryone] Whether or not @everyone and @here
    * should be replaced with plain-text
    * @property {FileOptions|BufferResolvable|Attachment} [file] A file to send with the message **(deprecated)**
@@ -86,7 +84,7 @@ class TextBasedChannel {
    * @example
    * // Send a remote file
    * channel.send({
-   *   files: ['https://cdn.discord.com/icons/222078108977594368/6e1019b3179d71046e463a75915e7244.png?size=2048']
+   *   files: ['https://cdn.discordapp.com/icons/222078108977594368/6e1019b3179d71046e463a75915e7244.png?size=2048']
    * })
    *   .then(console.log)
    *   .catch(console.error);
@@ -125,7 +123,7 @@ class TextBasedChannel {
       options = {};
     }
 
-    const reply = options.reply;
+    const { reply } = options;
     if (options instanceof Attachment) options = { files: [options.file] };
     if (options instanceof RichEmbed) {
       if (options.reply) options.reply = undefined;
@@ -193,7 +191,7 @@ class TextBasedChannel {
    *   .catch(console.error);
    */
   fetchMessage(messageID) {
-    if (1 || !this.client.user.bot) {
+    if (!this.client.user.bot) {
       return this.fetchMessages({ limit: 1, around: messageID }).then(messages => {
         const msg = messages.get(messageID);
         if (!msg) throw new Error('Message not found.');
@@ -234,7 +232,7 @@ class TextBasedChannel {
    *   .then(messages => console.log(`${messages.filter(m => m.author.id === '84484653687267328').size} messages`))
    *   .catch(console.error);
    */
-  fetchMessages(options) { options = options || {};
+  fetchMessages(options = {}) {
     return this.client.rest.methods.getChannelMessages(this, options).then(data => {
       const messages = new Collection();
       for (const message of data) {
@@ -319,7 +317,7 @@ class TextBasedChannel {
    *   console.log(`I found: **${hit}**, total results: ${res.totalResults}`);
    * }).catch(console.error);
    */
-  search(options) { options = options || {};
+  search(options = {}) {
     return this.client.rest.methods.search(this, options);
   }
 
@@ -366,7 +364,7 @@ class TextBasedChannel {
    * // Force typing to fully stop in a channel
    * channel.stopTyping(true);
    */
-  stopTyping(force) {
+  stopTyping(force = false) {
     if (this.client.user._typing.has(this.id)) {
       const entry = this.client.user._typing.get(this.id);
       entry.count--;
@@ -375,20 +373,6 @@ class TextBasedChannel {
         this.client.user._typing.delete(this.id);
       }
     }
-  }
-  
-  /**
-   * Simulates typing message
-   * @param {string} content The content of the message
-   */
-  typeMessage(content, options) {
-	const ch = this;
-    ch.startTyping();
-
-    setTimeout(function() {
-	  ch.send(content, options || {});
-	  ch.stopTyping();
-    }, (Math.floor(content.length * 0.7)) * 1000);
   }
 
   /**
@@ -451,7 +435,7 @@ class TextBasedChannel {
    * collector.on('collect', m => console.log(`Collected ${m.content}`));
    * collector.on('end', collected => console.log(`Collected ${collected.size} items`));
    */
-  createMessageCollector(filter, options) { options = options || {};
+  createMessageCollector(filter, options = {}) {
     return new MessageCollector(this, filter, options);
   }
 
@@ -475,7 +459,7 @@ class TextBasedChannel {
    *   .then(collected => console.log(collected.size))
    *   .catch(collected => console.log(`After a minute, only ${collected.size} out of 4 voted.`));
    */
-  awaitMessages(filter, options) { options = options || {};
+  awaitMessages(filter, options = {}) {
     return new Promise((resolve, reject) => {
       const collector = this.createCollector(filter, options);
       collector.once('end', (collection, reason) => {
@@ -501,7 +485,7 @@ class TextBasedChannel {
    *   .then(messages => console.log(`Bulk deleted ${messages.size} messages`))
    *   .catch(console.error);
    */
-  bulkDelete(messages, filterOld) { if(filterOld===undefined) filterOld = false;
+  bulkDelete(messages, filterOld = false) {
     if (messages instanceof Array || messages instanceof Collection) {
       let messageIDs = messages instanceof Collection ? messages.keyArray() : messages.map(m => m.id || m);
       if (filterOld) {
@@ -581,7 +565,7 @@ const Deprecated = {
    * @returns {Promise<Message>}
    * @deprecated
    */
-  sendFiles(files, content, options) { options = options || {};
+  sendFiles(files, content, options = {}) {
     return this.send(content, Object.assign(options, { files }));
   },
 
@@ -594,7 +578,7 @@ const Deprecated = {
    * @returns {Promise<Message>}
    * @deprecated
    */
-  sendFile(attachment, name, content, options) { options = options || {};
+  sendFile(attachment, name, content, options = {}) {
     return this.send({ files: [{ attachment, name }], content, options });
   },
 
@@ -606,7 +590,7 @@ const Deprecated = {
    * @returns {Promise<Message|Message[]>}
    * @deprecated
    */
-  sendCode(lang, content, options) { options = options || {};
+  sendCode(lang, content, options = {}) {
     return this.send(content, Object.assign(options, { code: lang }));
   },
 };
@@ -615,17 +599,7 @@ for (const key of Object.keys(Deprecated)) {
   TextBasedChannel.prototype[key] = util.deprecate(Deprecated[key], `TextChannel#${key}: use TextChannel#send instead`);
 }
 
-exports.applyToClass = (structure, full, ignore) => {
-	if(typeof(Array.prototype.includes) !== 'function') {
-		Array.prototype.includes = function(val) {
-			for(var item of this) {
-				if(item === val) return true;
-			}
-			
-			return false;
-		};
-	}
-  ignore=ignore || [];
+exports.applyToClass = (structure, full = false, ignore = []) => {
   const props = ['send', 'sendMessage', 'sendEmbed', 'sendFile', 'sendFiles', 'sendCode'];
   if (full) {
     props.push(
@@ -639,14 +613,12 @@ exports.applyToClass = (structure, full, ignore) => {
       'bulkDelete',
       'startTyping',
       'stopTyping',
-      'stopTyping',
       'typing',
       'typingCount',
       'fetchPinnedMessages',
       'createCollector',
       'createMessageCollector',
-      'awaitMessages',
-	  'typeMessage'
+      'awaitMessages'
     );
   }
   for (const prop of props) {

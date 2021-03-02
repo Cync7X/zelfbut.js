@@ -1,5 +1,3 @@
-'use strict';
-
 const AbstractHandler = require('./AbstractHandler');
 
 class MessageReactionAddHandler extends AbstractHandler {

@@ -1,7 +1,5 @@
-'use strict';
-
 const EventEmitter = require('events').EventEmitter;
-const Prism = require('../../../../prism-media/src');
+const Prism = require('prism-media');
 const StreamDispatcher = require('../dispatcher/StreamDispatcher');
 const Collection = require('../../../util/Collection');
 const OpusEncoders = require('../opus/OpusEngineList');
@@ -93,7 +91,7 @@ class AudioPlayer extends EventEmitter {
     this.opusEncoder.setBitrate(bitrate);
   }
 
-  playUnknownStream(stream, options) { options = options || {};
+  playUnknownStream(stream, options = {}) {
     this.destroy();
     this.opusEncoder = OpusEncoders.fetch(options);
     const transcoder = this.prism.transcode({
@@ -115,7 +113,7 @@ class AudioPlayer extends EventEmitter {
     return this.playPCMStream(transcoder.output, options, true);
   }
 
-  playPCMStream(stream, options, fromUnknown) { options=options||{};
+  playPCMStream(stream, options = {}, fromUnknown = false) {
     this.destroy();
     this.opusEncoder = OpusEncoders.fetch(options);
     this.setBitrate(options.bitrate);
@@ -133,7 +131,7 @@ class AudioPlayer extends EventEmitter {
     return dispatcher;
   }
 
-  playOpusStream(stream, options) { options = options || {};
+  playOpusStream(stream, options = {}) {
     options.opus = true;
     this.destroyCurrentStream();
     const dispatcher = this.createDispatcher(stream, options);
@@ -158,16 +156,7 @@ class AudioPlayer extends EventEmitter {
     return dispatcher;
   }
 
-  createDispatcher(stream, obj) {
-	var _obj = obj||{};
-	var _obj$seek = _obj.seek;
-	var seek = _obj$seek === undefined ? 0 : _obj$seek;
-	var _obj$volume = _obj.volume;
-	var volume = _obj$volume === undefined ? 1 : _obj$volume;
-	var _obj$passes = _obj.passes;
-	var passes = _obj$passes === undefined ? 1 : _obj$passes;
-	var opus = _obj.opus;
-	
+  createDispatcher(stream, { seek = 0, volume = 1, passes = 1, opus } = {}) {
     const options = { seek, volume, passes, opus };
 
     const dispatcher = new StreamDispatcher(this, stream, options);

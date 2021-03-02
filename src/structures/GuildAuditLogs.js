@@ -1,5 +1,3 @@
-'use strict';
-
 const Collection = require('../util/Collection');
 const Snowflake = require('../util/Snowflake');
 const Webhook = require('./Webhook');
@@ -171,20 +169,10 @@ class GuildAuditLogs {
    * Handles possible promises for entry targets.
    * @returns {Promise<GuildAuditLogs>}
    */
-  static build() {
-	  var _len$jscomp$0 = arguments.length;
-	  var args$jscomp$0 = Array(_len$jscomp$0);
-	  var _key$jscomp$0 = 0;
-	  for (; _key$jscomp$0 < _len$jscomp$0; _key$jscomp$0++) {
-		args$jscomp$0[_key$jscomp$0] = arguments[_key$jscomp$0];
-	  }
-	  var logs$jscomp$0 = new (Function.prototype.bind.apply(GuildAuditLogs, [null].concat(args$jscomp$0)));
-	  return Promise.all(logs$jscomp$0.entries.map(function(e$jscomp$7) {
-		return e$jscomp$7.target;
-	  })).then(function() {
-		return logs$jscomp$0;
-	  });
-	}
+  static build(...args) {
+    const logs = new GuildAuditLogs(...args);
+    return Promise.all(logs.entries.map(e => e.target)).then(() => logs);
+  }
 
   /**
    * The target of an entry. It can be one of:

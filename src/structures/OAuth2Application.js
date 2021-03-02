@@ -1,5 +1,3 @@
-'use strict';
-
 const Snowflake = require('../util/Snowflake');
 const Team = require('./Team');
 const util = require('util');
@@ -49,7 +47,7 @@ class OAuth2Application {
      * The app's icon URL
      * @type {string}
      */
-    this.iconURL = `https://cdn.discord.com/app-icons/${this.id}/${this.icon}.jpg`;
+    this.iconURL = `https://cdn.discordapp.com/app-icons/${this.id}/${this.icon}.jpg`;
 
     /**
      * The app's RPC origins
