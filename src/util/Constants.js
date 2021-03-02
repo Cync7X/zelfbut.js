@@ -1,4 +1,4 @@
-exports.Package = require('../../package.json');
+exports.Package = require("../../package.json");
 
 /**
  * Options for a client.
@@ -34,7 +34,7 @@ exports.Package = require('../../package.json');
  * @property {HTTPOptions} [http] HTTP options
  */
 exports.DefaultOptions = {
-  apiRequestMethod: 'sequential',
+  apiRequestMethod: "sequential",
   shardId: 0,
   shardCount: 0,
   messageCacheMaxSize: 200,
@@ -57,13 +57,13 @@ exports.DefaultOptions = {
    */
   ws: {
     large_threshold: 250,
-    compress: require('os').platform() !== 'browser',
+    compress: require("os").platform() !== "browser",
     properties: {
-      $os: process ? process.platform : 'discord.js',
-      $browser: 'discord.js',
-      $device: 'discord.js',
-      $referrer: '',
-      $referring_domain: '',
+      $os: process ? process.platform : "discord.js",
+      $browser: "discord.js",
+      $device: "discord.js",
+      $referrer: "",
+      $referring_domain: "",
     },
     version: 6,
   },
@@ -71,41 +71,43 @@ exports.DefaultOptions = {
   /**
    * HTTP options
    * @typedef {Object} HTTPOptions
-   * @property {number} [version=7] API version to use
-   * @property {string} [api='https://discordapp.com/api'] Base url of the API
-   * @property {string} [cdn='https://cdn.discordapp.com'] Base url of the CDN
+   * @property {number} [version=8] API version to use
+   * @property {string} [api='https://discord.com/api'] Base url of the API
+   * @property {string} [cdn='https://cdn.discord.com'] Base url of the CDN
    * @property {string} [invite='https://discord.gg'] Base url of invites
    */
   http: {
-    version: 7,
-    host: 'https://discordapp.com',
-    cdn: 'https://cdn.discordapp.com',
+    version: 8,
+    host: "https://discord.com",
+    cdn: "https://cdn.discordapp.com",
   },
 };
 
 exports.WSCodes = {
-  1000: 'Connection gracefully closed',
-  4004: 'Tried to identify with an invalid token',
-  4010: 'Sharding data provided was invalid',
-  4011: 'Shard would be on too many guilds if connected',
+  1000: "Connection gracefully closed",
+  4004: "Tried to identify with an invalid token",
+  4010: "Sharding data provided was invalid",
+  4011: "Shard would be on too many guilds if connected",
 };
 
 exports.Errors = {
-  NO_TOKEN: 'Request to use token, but token was unavailable to the client.',
-  NO_BOT_ACCOUNT: 'Only bot accounts are able to make use of this feature.',
-  NO_USER_ACCOUNT: 'Only user accounts are able to make use of this feature.',
-  BAD_WS_MESSAGE: 'A bad message was received from the websocket; either bad compression, or not JSON.',
-  TOOK_TOO_LONG: 'Something took too long to do.',
-  NOT_A_PERMISSION: 'Invalid permission string or number.',
-  INVALID_RATE_LIMIT_METHOD: 'Unknown rate limiting method.',
-  BAD_LOGIN: 'Incorrect login details were provided.',
-  INVALID_SHARD: 'Invalid shard settings were provided.',
-  SHARDING_REQUIRED: 'This session would have handled too many guilds - Sharding is required.',
-  INVALID_TOKEN: 'An invalid token was provided.',
+  NO_TOKEN: "Request to use token, but token was unavailable to the client.",
+  NO_BOT_ACCOUNT: "Only bot accounts are able to make use of this feature.",
+  NO_USER_ACCOUNT: "Only user accounts are able to make use of this feature.",
+  BAD_WS_MESSAGE:
+    "A bad message was received from the websocket; either bad compression, or not JSON.",
+  TOOK_TOO_LONG: "Something took too long to do.",
+  NOT_A_PERMISSION: "Invalid permission string or number.",
+  INVALID_RATE_LIMIT_METHOD: "Unknown rate limiting method.",
+  BAD_LOGIN: "Incorrect login details were provided.",
+  INVALID_SHARD: "Invalid shard settings were provided.",
+  SHARDING_REQUIRED:
+    "This session would have handled too many guilds - Sharding is required.",
+  INVALID_TOKEN: "An invalid token was provided.",
 };
 
-const Endpoints = exports.Endpoints = {
-  User: userID => {
+const Endpoints = (exports.Endpoints = {
+  User: (userID) => {
     if (userID.id) userID = userID.id;
     const base = `/users/${userID}`;
     return {
@@ -114,22 +116,24 @@ const Endpoints = exports.Endpoints = {
       profile: `${base}/profile`,
       relationships: `${base}/relationships`,
       settings: `${base}/settings`,
-      Relationship: uID => `${base}/relationships/${uID}`,
-      Guild: guildID => ({
+      Relationship: (uID) => `${base}/relationships/${uID}`,
+      Guild: (guildID) => ({
         toString: () => `${base}/guilds/${guildID}`,
         settings: `${base}/guilds/${guildID}/settings`,
       }),
-      Note: id => `${base}/notes/${id}`,
+      Note: (id) => `${base}/notes/${id}`,
       Mentions: (limit, roles, everyone, guildID) =>
-        `${base}/mentions?limit=${limit}&roles=${roles}&everyone=${everyone}${guildID ? `&guild_id=${guildID}` : ''}`,
+        `${base}/mentions?limit=${limit}&roles=${roles}&everyone=${everyone}${
+          guildID ? `&guild_id=${guildID}` : ""
+        }`,
       Avatar: (root, hash) => {
-        if (userID === '1') return hash;
+        if (userID === "1") return hash;
         return Endpoints.CDN(root).Avatar(userID, hash);
       },
     };
   },
-  guilds: '/guilds',
-  Guild: guildID => {
+  guilds: "/guilds",
+  Guild: (guildID) => {
     if (guildID.id) guildID = guildID.id;
     const base = `/guilds/${guildID}`;
     return {
@@ -150,25 +154,25 @@ const Endpoints = exports.Endpoints = {
       ack: `${base}/ack`,
       settings: `${base}/settings`,
       auditLogs: `${base}/audit-logs`,
-      Emoji: emojiID => `${base}/emojis/${emojiID}`,
+      Emoji: (emojiID) => `${base}/emojis/${emojiID}`,
       Icon: (root, hash) => Endpoints.CDN(root).Icon(guildID, hash),
       Banner: (root, hash) => Endpoints.CDN(root).Banner(guildID, hash),
       Splash: (root, hash) => Endpoints.CDN(root).Splash(guildID, hash),
-      Role: roleID => `${base}/roles/${roleID}`,
-      Member: memberID => {
+      Role: (roleID) => `${base}/roles/${roleID}`,
+      Member: (memberID) => {
         if (memberID.id) memberID = memberID.id;
         const mbase = `${base}/members/${memberID}`;
         return {
           toString: () => mbase,
-          Role: roleID => `${mbase}/roles/${roleID}`,
+          Role: (roleID) => `${mbase}/roles/${roleID}`,
           nickname: `${base}/members/@me/nick`,
         };
       },
-      Integration: id => `${base}/integrations/${id}`,
+      Integration: (id) => `${base}/integrations/${id}`,
     };
   },
-  channels: '/channels',
-  Channel: channelID => {
+  channels: "/channels",
+  Channel: (channelID) => {
     if (channelID.id) channelID = channelID.id;
     const base = `/channels/${channelID}`;
     return {
@@ -184,44 +188,49 @@ const Endpoints = exports.Endpoints = {
       search: `${base}/messages/search`,
       pins: `${base}/pins`,
       Icon: (root, hash) => Endpoints.CDN(root).GDMIcon(channelID, hash),
-      Pin: messageID => `${base}/pins/${messageID}`,
-      Recipient: recipientID => `${base}/recipients/${recipientID}`,
-      Message: messageID => {
+      Pin: (messageID) => `${base}/pins/${messageID}`,
+      Recipient: (recipientID) => `${base}/recipients/${recipientID}`,
+      Message: (messageID) => {
         if (messageID.id) messageID = messageID.id;
         const mbase = `${base}/messages/${messageID}`;
         return {
           toString: () => mbase,
           reactions: `${mbase}/reactions`,
           ack: `${mbase}/ack`,
-          Reaction: emoji => {
+          Reaction: (emoji) => {
             const rbase = `${mbase}/reactions/${emoji}`;
             return {
               toString: () => rbase,
-              User: userID => `${rbase}/${userID}`,
+              User: (userID) => `${rbase}/${userID}`,
             };
           },
         };
       },
     };
   },
-  Message: m => exports.Endpoints.Channel(m.channel).Message(m),
-  Member: m => exports.Endpoints.Guild(m.guild).Member(m),
+  Message: (m) => exports.Endpoints.Channel(m.channel).Message(m),
+  Member: (m) => exports.Endpoints.Guild(m.guild).Member(m),
   CDN(root) {
     return {
-      Emoji: (emojiID, format = 'png') => `${root}/emojis/${emojiID}.${format}`,
-      Asset: name => `${root}/assets/${name}`,
-      Avatar: (userID, hash) => `${root}/avatars/${userID}/${hash}.${hash.startsWith('a_') ? 'gif' : 'png?size=2048'}`,
+      Emoji: (emojiID, format = "png") => `${root}/emojis/${emojiID}.${format}`,
+      Asset: (name) => `${root}/assets/${name}`,
+      Avatar: (userID, hash) =>
+        `${root}/avatars/${userID}/${hash}.${
+          hash.startsWith("a_") ? "gif" : "png?size=2048"
+        }`,
       Icon: (guildID, hash) => `${root}/icons/${guildID}/${hash}.jpg`,
       Banner: (guildID, hash) => `${root}/banners/${guildID}/${hash}.jpg`,
       AppIcon: (clientID, hash) => `${root}/app-icons/${clientID}/${hash}.png`,
-      AppAsset: (clientID, hash) => `${root}/app-assets/${clientID}/${hash}.png`,
-      GDMIcon: (channelID, hash) => `${root}/channel-icons/${channelID}/${hash}.jpg?size=2048`,
+      AppAsset: (clientID, hash) =>
+        `${root}/app-assets/${clientID}/${hash}.png`,
+      GDMIcon: (channelID, hash) =>
+        `${root}/channel-icons/${channelID}/${hash}.jpg?size=2048`,
       Splash: (guildID, hash) => `${root}/splashes/${guildID}/${hash}.jpg`,
       TeamIcon: (teamID, hash) => `${root}/team-icons/${teamID}/${hash}.jpg`,
     };
   },
   OAUTH2: {
-    Application: appID => {
+    Application: (appID) => {
       const base = `/oauth2/applications/${appID}`;
       return {
         toString: () => base,
@@ -229,20 +238,20 @@ const Endpoints = exports.Endpoints = {
         resetToken: `${base}/bot/reset`,
       };
     },
-    App: appID => `/oauth2/authorize?client_id=${appID}`,
+    App: (appID) => `/oauth2/authorize?client_id=${appID}`,
   },
-  login: '/auth/login',
-  logout: '/auth/logout',
-  voiceRegions: '/voice/regions',
+  login: "/auth/login",
+  logout: "/auth/logout",
+  voiceRegions: "/voice/regions",
   gateway: {
-    toString: () => '/gateway',
-    bot: '/gateway/bot',
+    toString: () => "/gateway",
+    bot: "/gateway/bot",
   },
-  Invite: inviteID => `/invite/${inviteID}?with_counts=true`,
-  inviteLink: id => `https://discord.gg/${id}`,
-  Webhook: (webhookID, token) => `/webhooks/${webhookID}${token ? `/${token}` : ''}`,
-};
-
+  Invite: (inviteID) => `/invite/${inviteID}?with_counts=true`,
+  inviteLink: (id) => `https://discord.gg/${id}`,
+  Webhook: (webhookID, token) =>
+    `/webhooks/${webhookID}${token ? `/${token}` : ""}`,
+});
 
 /**
  * The current status of the client. Here are the available statuses:
@@ -315,57 +324,57 @@ exports.VoiceOPCodes = {
 };
 
 exports.Events = {
-  RATE_LIMIT: 'rateLimit',
-  READY: 'ready',
-  RESUME: 'resume',
-  GUILD_CREATE: 'guildCreate',
-  GUILD_DELETE: 'guildDelete',
-  GUILD_UPDATE: 'guildUpdate',
-  GUILD_UNAVAILABLE: 'guildUnavailable',
-  GUILD_AVAILABLE: 'guildAvailable',
-  GUILD_MEMBER_ADD: 'guildMemberAdd',
-  GUILD_MEMBER_REMOVE: 'guildMemberRemove',
-  GUILD_MEMBER_UPDATE: 'guildMemberUpdate',
-  GUILD_MEMBER_AVAILABLE: 'guildMemberAvailable',
-  GUILD_MEMBER_SPEAKING: 'guildMemberSpeaking',
-  GUILD_MEMBERS_CHUNK: 'guildMembersChunk',
-  GUILD_INTEGRATIONS_UPDATE: 'guildIntegrationsUpdate',
-  GUILD_ROLE_CREATE: 'roleCreate',
-  GUILD_ROLE_DELETE: 'roleDelete',
-  GUILD_ROLE_UPDATE: 'roleUpdate',
-  GUILD_EMOJI_CREATE: 'emojiCreate',
-  GUILD_EMOJI_DELETE: 'emojiDelete',
-  GUILD_EMOJI_UPDATE: 'emojiUpdate',
-  GUILD_BAN_ADD: 'guildBanAdd',
-  GUILD_BAN_REMOVE: 'guildBanRemove',
-  INVITE_CREATE: 'inviteCreate',
-  INVITE_DELETE: 'inviteDelete',
-  CHANNEL_CREATE: 'channelCreate',
-  CHANNEL_DELETE: 'channelDelete',
-  CHANNEL_UPDATE: 'channelUpdate',
-  CHANNEL_PINS_UPDATE: 'channelPinsUpdate',
-  MESSAGE_CREATE: 'message',
-  MESSAGE_DELETE: 'messageDelete',
-  MESSAGE_UPDATE: 'messageUpdate',
-  MESSAGE_BULK_DELETE: 'messageDeleteBulk',
-  MESSAGE_REACTION_ADD: 'messageReactionAdd',
-  MESSAGE_REACTION_REMOVE: 'messageReactionRemove',
-  MESSAGE_REACTION_REMOVE_EMOJI: 'messageReactionRemoveEmoji',
-  MESSAGE_REACTION_REMOVE_ALL: 'messageReactionRemoveAll',
-  USER_UPDATE: 'userUpdate',
-  USER_NOTE_UPDATE: 'userNoteUpdate',
-  USER_SETTINGS_UPDATE: 'clientUserSettingsUpdate',
-  USER_GUILD_SETTINGS_UPDATE: 'clientUserGuildSettingsUpdate',
-  PRESENCE_UPDATE: 'presenceUpdate',
-  VOICE_STATE_UPDATE: 'voiceStateUpdate',
-  TYPING_START: 'typingStart',
-  TYPING_STOP: 'typingStop',
-  WEBHOOKS_UPDATE: 'webhookUpdate',
-  DISCONNECT: 'disconnect',
-  RECONNECTING: 'reconnecting',
-  ERROR: 'error',
-  WARN: 'warn',
-  DEBUG: 'debug',
+  RATE_LIMIT: "rateLimit",
+  READY: "ready",
+  RESUME: "resume",
+  GUILD_CREATE: "guildCreate",
+  GUILD_DELETE: "guildDelete",
+  GUILD_UPDATE: "guildUpdate",
+  GUILD_UNAVAILABLE: "guildUnavailable",
+  GUILD_AVAILABLE: "guildAvailable",
+  GUILD_MEMBER_ADD: "guildMemberAdd",
+  GUILD_MEMBER_REMOVE: "guildMemberRemove",
+  GUILD_MEMBER_UPDATE: "guildMemberUpdate",
+  GUILD_MEMBER_AVAILABLE: "guildMemberAvailable",
+  GUILD_MEMBER_SPEAKING: "guildMemberSpeaking",
+  GUILD_MEMBERS_CHUNK: "guildMembersChunk",
+  GUILD_INTEGRATIONS_UPDATE: "guildIntegrationsUpdate",
+  GUILD_ROLE_CREATE: "roleCreate",
+  GUILD_ROLE_DELETE: "roleDelete",
+  GUILD_ROLE_UPDATE: "roleUpdate",
+  GUILD_EMOJI_CREATE: "emojiCreate",
+  GUILD_EMOJI_DELETE: "emojiDelete",
+  GUILD_EMOJI_UPDATE: "emojiUpdate",
+  GUILD_BAN_ADD: "guildBanAdd",
+  GUILD_BAN_REMOVE: "guildBanRemove",
+  INVITE_CREATE: "inviteCreate",
+  INVITE_DELETE: "inviteDelete",
+  CHANNEL_CREATE: "channelCreate",
+  CHANNEL_DELETE: "channelDelete",
+  CHANNEL_UPDATE: "channelUpdate",
+  CHANNEL_PINS_UPDATE: "channelPinsUpdate",
+  MESSAGE_CREATE: "message",
+  MESSAGE_DELETE: "messageDelete",
+  MESSAGE_UPDATE: "messageUpdate",
+  MESSAGE_BULK_DELETE: "messageDeleteBulk",
+  MESSAGE_REACTION_ADD: "messageReactionAdd",
+  MESSAGE_REACTION_REMOVE: "messageReactionRemove",
+  MESSAGE_REACTION_REMOVE_EMOJI: "messageReactionRemoveEmoji",
+  MESSAGE_REACTION_REMOVE_ALL: "messageReactionRemoveAll",
+  USER_UPDATE: "userUpdate",
+  USER_NOTE_UPDATE: "userNoteUpdate",
+  USER_SETTINGS_UPDATE: "clientUserSettingsUpdate",
+  USER_GUILD_SETTINGS_UPDATE: "clientUserGuildSettingsUpdate",
+  PRESENCE_UPDATE: "presenceUpdate",
+  VOICE_STATE_UPDATE: "voiceStateUpdate",
+  TYPING_START: "typingStart",
+  TYPING_STOP: "typingStop",
+  WEBHOOKS_UPDATE: "webhookUpdate",
+  DISCONNECT: "disconnect",
+  RECONNECTING: "reconnecting",
+  ERROR: "error",
+  WARN: "warn",
+  DEBUG: "debug",
 };
 
 /**
@@ -379,11 +388,11 @@ exports.Events = {
  * @typedef {string} ActivityType
  */
 exports.ActivityTypes = [
-  'PLAYING',
-  'STREAMING',
-  'LISTENING',
-  'WATCHING',
-  'CUSTOM_STATUS',
+  "PLAYING",
+  "STREAMING",
+  "LISTENING",
+  "WATCHING",
+  "CUSTOM_STATUS",
 ];
 
 /**
@@ -449,48 +458,48 @@ exports.ActivityFlags = {
  * @typedef {string} WSEventType
  */
 exports.WSEvents = {
-  READY: 'READY',
-  RESUMED: 'RESUMED',
-  GUILD_SYNC: 'GUILD_SYNC',
-  GUILD_CREATE: 'GUILD_CREATE',
-  GUILD_DELETE: 'GUILD_DELETE',
-  GUILD_UPDATE: 'GUILD_UPDATE',
-  GUILD_MEMBER_ADD: 'GUILD_MEMBER_ADD',
-  GUILD_MEMBER_REMOVE: 'GUILD_MEMBER_REMOVE',
-  GUILD_MEMBER_UPDATE: 'GUILD_MEMBER_UPDATE',
-  GUILD_MEMBERS_CHUNK: 'GUILD_MEMBERS_CHUNK',
-  GUILD_INTEGRATIONS_UPDATE: 'GUILD_INTEGRATIONS_UPDATE',
-  GUILD_ROLE_CREATE: 'GUILD_ROLE_CREATE',
-  GUILD_ROLE_DELETE: 'GUILD_ROLE_DELETE',
-  GUILD_ROLE_UPDATE: 'GUILD_ROLE_UPDATE',
-  GUILD_BAN_ADD: 'GUILD_BAN_ADD',
-  GUILD_BAN_REMOVE: 'GUILD_BAN_REMOVE',
-  GUILD_EMOJIS_UPDATE: 'GUILD_EMOJIS_UPDATE',
-  INVITE_CREATE: 'INVITE_CREATE',
-  INVITE_DELETE: 'INVITE_DELETE',
-  CHANNEL_CREATE: 'CHANNEL_CREATE',
-  CHANNEL_DELETE: 'CHANNEL_DELETE',
-  CHANNEL_UPDATE: 'CHANNEL_UPDATE',
-  CHANNEL_PINS_UPDATE: 'CHANNEL_PINS_UPDATE',
-  MESSAGE_CREATE: 'MESSAGE_CREATE',
-  MESSAGE_DELETE: 'MESSAGE_DELETE',
-  MESSAGE_UPDATE: 'MESSAGE_UPDATE',
-  MESSAGE_DELETE_BULK: 'MESSAGE_DELETE_BULK',
-  MESSAGE_REACTION_ADD: 'MESSAGE_REACTION_ADD',
-  MESSAGE_REACTION_REMOVE: 'MESSAGE_REACTION_REMOVE',
-  MESSAGE_REACTION_REMOVE_EMOJI: 'MESSAGE_REACTION_REMOVE_EMOJI',
-  MESSAGE_REACTION_REMOVE_ALL: 'MESSAGE_REACTION_REMOVE_ALL',
-  USER_UPDATE: 'USER_UPDATE',
-  USER_NOTE_UPDATE: 'USER_NOTE_UPDATE',
-  USER_SETTINGS_UPDATE: 'USER_SETTINGS_UPDATE',
-  USER_GUILD_SETTINGS_UPDATE: 'USER_GUILD_SETTINGS_UPDATE',
-  PRESENCE_UPDATE: 'PRESENCE_UPDATE',
-  VOICE_STATE_UPDATE: 'VOICE_STATE_UPDATE',
-  TYPING_START: 'TYPING_START',
-  VOICE_SERVER_UPDATE: 'VOICE_SERVER_UPDATE',
-  RELATIONSHIP_ADD: 'RELATIONSHIP_ADD',
-  RELATIONSHIP_REMOVE: 'RELATIONSHIP_REMOVE',
-  WEBHOOKS_UPDATE: 'WEBHOOKS_UPDATE',
+  READY: "READY",
+  RESUMED: "RESUMED",
+  GUILD_SYNC: "GUILD_SYNC",
+  GUILD_CREATE: "GUILD_CREATE",
+  GUILD_DELETE: "GUILD_DELETE",
+  GUILD_UPDATE: "GUILD_UPDATE",
+  GUILD_MEMBER_ADD: "GUILD_MEMBER_ADD",
+  GUILD_MEMBER_REMOVE: "GUILD_MEMBER_REMOVE",
+  GUILD_MEMBER_UPDATE: "GUILD_MEMBER_UPDATE",
+  GUILD_MEMBERS_CHUNK: "GUILD_MEMBERS_CHUNK",
+  GUILD_INTEGRATIONS_UPDATE: "GUILD_INTEGRATIONS_UPDATE",
+  GUILD_ROLE_CREATE: "GUILD_ROLE_CREATE",
+  GUILD_ROLE_DELETE: "GUILD_ROLE_DELETE",
+  GUILD_ROLE_UPDATE: "GUILD_ROLE_UPDATE",
+  GUILD_BAN_ADD: "GUILD_BAN_ADD",
+  GUILD_BAN_REMOVE: "GUILD_BAN_REMOVE",
+  GUILD_EMOJIS_UPDATE: "GUILD_EMOJIS_UPDATE",
+  INVITE_CREATE: "INVITE_CREATE",
+  INVITE_DELETE: "INVITE_DELETE",
+  CHANNEL_CREATE: "CHANNEL_CREATE",
+  CHANNEL_DELETE: "CHANNEL_DELETE",
+  CHANNEL_UPDATE: "CHANNEL_UPDATE",
+  CHANNEL_PINS_UPDATE: "CHANNEL_PINS_UPDATE",
+  MESSAGE_CREATE: "MESSAGE_CREATE",
+  MESSAGE_DELETE: "MESSAGE_DELETE",
+  MESSAGE_UPDATE: "MESSAGE_UPDATE",
+  MESSAGE_DELETE_BULK: "MESSAGE_DELETE_BULK",
+  MESSAGE_REACTION_ADD: "MESSAGE_REACTION_ADD",
+  MESSAGE_REACTION_REMOVE: "MESSAGE_REACTION_REMOVE",
+  MESSAGE_REACTION_REMOVE_EMOJI: "MESSAGE_REACTION_REMOVE_EMOJI",
+  MESSAGE_REACTION_REMOVE_ALL: "MESSAGE_REACTION_REMOVE_ALL",
+  USER_UPDATE: "USER_UPDATE",
+  USER_NOTE_UPDATE: "USER_NOTE_UPDATE",
+  USER_SETTINGS_UPDATE: "USER_SETTINGS_UPDATE",
+  USER_GUILD_SETTINGS_UPDATE: "USER_GUILD_SETTINGS_UPDATE",
+  PRESENCE_UPDATE: "PRESENCE_UPDATE",
+  VOICE_STATE_UPDATE: "VOICE_STATE_UPDATE",
+  TYPING_START: "TYPING_START",
+  VOICE_SERVER_UPDATE: "VOICE_SERVER_UPDATE",
+  RELATIONSHIP_ADD: "RELATIONSHIP_ADD",
+  RELATIONSHIP_REMOVE: "RELATIONSHIP_REMOVE",
+  WEBHOOKS_UPDATE: "WEBHOOKS_UPDATE",
 };
 
 /**
@@ -513,23 +522,23 @@ exports.WSEvents = {
  * @typedef {string} MessageType
  */
 exports.MessageTypes = [
-  'DEFAULT',
-  'RECIPIENT_ADD',
-  'RECIPIENT_REMOVE',
-  'CALL',
-  'CHANNEL_NAME_CHANGE',
-  'CHANNEL_ICON_CHANGE',
-  'PINS_ADD',
-  'GUILD_MEMBER_JOIN',
-  'USER_PREMIUM_GUILD_SUBSCRIPTION',
-  'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1',
-  'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2',
-  'USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3',
-  'CHANNEL_FOLLOW_ADD',
+  "DEFAULT",
+  "RECIPIENT_ADD",
+  "RECIPIENT_REMOVE",
+  "CALL",
+  "CHANNEL_NAME_CHANGE",
+  "CHANNEL_ICON_CHANGE",
+  "PINS_ADD",
+  "GUILD_MEMBER_JOIN",
+  "USER_PREMIUM_GUILD_SUBSCRIPTION",
+  "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1",
+  "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2",
+  "USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3",
+  "CHANNEL_FOLLOW_ADD",
   // 13 isn't yet documented
   null,
-  'GUILD_DISCOVERY_DISQUALIFIED',
-  'GUILD_DISCOVERY_REQUALIFIED',
+  "GUILD_DISCOVERY_DISQUALIFIED",
+  "GUILD_DISCOVERY_REQUALIFIED",
 ];
 
 /**
@@ -541,24 +550,24 @@ exports.MessageTypes = [
  * @typedef {string} MessageNotificationType
  */
 exports.MessageNotificationTypes = [
-  'EVERYTHING',
-  'MENTIONS',
-  'NOTHING',
-  'INHERIT',
+  "EVERYTHING",
+  "MENTIONS",
+  "NOTHING",
+  "INHERIT",
 ];
 
 exports.DefaultAvatars = {
-  BLURPLE: '6debd47ed13483642cf09e832ed0bc1b',
-  GREY: '322c936a8c8be1b803cd94861bdfa868',
-  GREEN: 'dd4dbc0016779df1378e7812eabaa04d',
-  ORANGE: '0e291f67c9274a1abdddeb3fd919cbaa',
-  RED: '1cbd08c76f8af6dddce02c5138971129',
+  BLURPLE: "6debd47ed13483642cf09e832ed0bc1b",
+  GREY: "322c936a8c8be1b803cd94861bdfa868",
+  GREEN: "dd4dbc0016779df1378e7812eabaa04d",
+  ORANGE: "0e291f67c9274a1abdddeb3fd919cbaa",
+  RED: "1cbd08c76f8af6dddce02c5138971129",
 };
 
 exports.ExplicitContentFilterTypes = [
-  'DISABLED',
-  'NON_FRIENDS',
-  'FRIENDS_AND_NON_FRIENDS',
+  "DISABLED",
+  "NON_FRIENDS",
+  "FRIENDS_AND_NON_FRIENDS",
 ];
 
 exports.UserSettingsMap = {
@@ -568,107 +577,108 @@ exports.UserSettingsMap = {
    * @name ClientUserSettings#convertEmoticons
    * @type {boolean}
    */
-  convert_emoticons: 'convertEmoticons',
+  convert_emoticons: "convertEmoticons",
 
   /**
    * If new guilds should automatically disable DMs between you and its members
    * @name ClientUserSettings#defaultGuildsRestricted
    * @type {boolean}
    */
-  default_guilds_restricted: 'defaultGuildsRestricted',
+  default_guilds_restricted: "defaultGuildsRestricted",
 
   /**
    * Automatically detect accounts from services like Steam and Blizzard when you open the Discord client
    * @name ClientUserSettings#detectPlatformAccounts
    * @type {boolean}
    */
-  detect_platform_accounts: 'detectPlatformAccounts',
+  detect_platform_accounts: "detectPlatformAccounts",
 
   /**
    * Developer Mode exposes context menu items helpful for people writing bots using the Discord API
    * @name ClientUserSettings#developerMode
    * @type {boolean}
    */
-  developer_mode: 'developerMode',
+  developer_mode: "developerMode",
 
   /**
    * Allow playback and usage of the `/tts` command
    * @name ClientUserSettings#enableTTSCommand
    * @type {boolean}
    */
-  enable_tts_command: 'enableTTSCommand',
+  enable_tts_command: "enableTTSCommand",
 
   /**
    * The theme of the client. Either `light` or `dark`
    * @name ClientUserSettings#theme
    * @type {string}
    */
-  theme: 'theme',
+  theme: "theme",
 
   /**
    * Last status set in the client
    * @name ClientUserSettings#status
    * @type {PresenceStatus}
    */
-  status: 'status',
+  status: "status",
 
   /**
    * Display currently running game as status message
    * @name ClientUserSettings#showCurrentGame
    * @type {boolean}
    */
-  show_current_game: 'showCurrentGame',
+  show_current_game: "showCurrentGame",
 
   /**
    * Display images, videos, and lolcats when uploaded directly to Discord
    * @name ClientUserSettings#inlineAttachmentMedia
    * @type {boolean}
    */
-  inline_attachment_media: 'inlineAttachmentMedia',
+  inline_attachment_media: "inlineAttachmentMedia",
 
   /**
    * Display images, videos, and lolcats when uploaded posted as links in chat
    * @name ClientUserSettings#inlineEmbedMedia
    * @type {boolean}
    */
-  inline_embed_media: 'inlineEmbedMedia',
+  inline_embed_media: "inlineEmbedMedia",
 
   /**
    * Language the Discord client will use, as an RFC 3066 language identifier
    * @name ClientUserSettings#locale
    * @type {string}
    */
-  locale: 'locale',
+  locale: "locale",
 
   /**
    * Display messages in compact mode
    * @name ClientUserSettings#messageDisplayCompact
    * @type {boolean}
    */
-  message_display_compact: 'messageDisplayCompact',
+  message_display_compact: "messageDisplayCompact",
 
   /**
    * Show emoji reactions on messages
    * @name ClientUserSettings#renderReactions
    * @type {boolean}
    */
-  render_reactions: 'renderReactions',
+  render_reactions: "renderReactions",
 
   /**
    * Array of snowflake IDs for guilds, in the order they appear in the Discord client
    * @name ClientUserSettings#guildPositions
    * @type {Snowflake[]}
    */
-  guild_positions: 'guildPositions',
+  guild_positions: "guildPositions",
 
   /**
    * Array of snowflake IDs for guilds which you will not recieve DMs from
    * @name ClientUserSettings#restrictedGuilds
    * @type {Snowflake[]}
    */
-  restricted_guilds: 'restrictedGuilds',
+  restricted_guilds: "restrictedGuilds",
 
-  explicit_content_filter: function explicitContentFilter(type) { // eslint-disable-line func-name-matching
+  explicit_content_filter: function explicitContentFilter(type) {
+    // eslint-disable-line func-name-matching
     /**
      * Safe direct messaging; force people's messages with images to be scanned before they are sent to you.
      * One of `DISABLED`, `NON_FRIENDS`, `FRIENDS_AND_NON_FRIENDS`
@@ -677,7 +687,8 @@ exports.UserSettingsMap = {
      */
     return exports.ExplicitContentFilterTypes[type];
   },
-  friend_source_flags: function friendSources(flags) { // eslint-disable-line func-name-matching
+  friend_source_flags: function friendSources(flags) {
+    // eslint-disable-line func-name-matching
     /**
      * Who can add you as a friend
      * @name ClientUserSettings#friendSources
@@ -695,7 +706,8 @@ exports.UserSettingsMap = {
 };
 
 exports.UserGuildSettingsMap = {
-  message_notifications: function messageNotifications(type) { // eslint-disable-line func-name-matching
+  message_notifications: function messageNotifications(type) {
+    // eslint-disable-line func-name-matching
     /**
      * The type of message that should notify you
      * @name ClientUserGuildSettings#messageNotifications
@@ -708,29 +720,30 @@ exports.UserGuildSettingsMap = {
    * @name ClientUserGuildSettings#mobilePush
    * @type {boolean}
    */
-  mobile_push: 'mobilePush',
+  mobile_push: "mobilePush",
   /**
    * Whether the guild is muted
    * @name ClientUserGuildSettings#muted
    * @type {boolean}
    */
-  muted: 'muted',
+  muted: "muted",
   /**
    * Whether to suppress everyone mention
    * @name ClientUserGuildSettings#suppressEveryone
    * @type {boolean}
    */
-  suppress_everyone: 'suppressEveryone',
+  suppress_everyone: "suppressEveryone",
   /**
    * A collection containing all the channel overrides
    * @name ClientUserGuildSettings#channelOverrides
    * @type {Collection<ClientUserChannelOverride>}
    */
-  channel_overrides: 'channelOverrides',
+  channel_overrides: "channelOverrides",
 };
 
 exports.UserChannelOverrideMap = {
-  message_notifications: function messageNotifications(type) { // eslint-disable-line func-name-matching
+  message_notifications: function messageNotifications(type) {
+    // eslint-disable-line func-name-matching
     /**
      * The type of message that should notify you
      * @name ClientUserChannelOverride#messageNotifications
@@ -743,38 +756,38 @@ exports.UserChannelOverrideMap = {
    * @name ClientUserChannelOverride#muted
    * @type {boolean}
    */
-  muted: 'muted',
+  muted: "muted",
 };
 
 exports.Colors = {
   DEFAULT: 0x000000,
-  WHITE: 0xFFFFFF,
-  AQUA: 0x1ABC9C,
-  GREEN: 0x2ECC71,
-  BLUE: 0x3498DB,
-  PURPLE: 0x9B59B6,
-  LUMINOUS_VIVID_PINK: 0xE91E63,
-  GOLD: 0xF1C40F,
-  ORANGE: 0xE67E22,
-  RED: 0xE74C3C,
-  GREY: 0x95A5A6,
-  NAVY: 0x34495E,
-  DARK_AQUA: 0x11806A,
-  DARK_GREEN: 0x1F8B4C,
+  WHITE: 0xffffff,
+  AQUA: 0x1abc9c,
+  GREEN: 0x2ecc71,
+  BLUE: 0x3498db,
+  PURPLE: 0x9b59b6,
+  LUMINOUS_VIVID_PINK: 0xe91e63,
+  GOLD: 0xf1c40f,
+  ORANGE: 0xe67e22,
+  RED: 0xe74c3c,
+  GREY: 0x95a5a6,
+  NAVY: 0x34495e,
+  DARK_AQUA: 0x11806a,
+  DARK_GREEN: 0x1f8b4c,
   DARK_BLUE: 0x206694,
-  DARK_PURPLE: 0x71368A,
-  DARK_VIVID_PINK: 0xAD1457,
-  DARK_GOLD: 0xC27C0E,
-  DARK_ORANGE: 0xA84300,
-  DARK_RED: 0x992D22,
-  DARK_GREY: 0x979C9F,
-  DARKER_GREY: 0x7F8C8D,
-  LIGHT_GREY: 0xBCC0C0,
-  DARK_NAVY: 0x2C3E50,
-  BLURPLE: 0x7289DA,
-  GREYPLE: 0x99AAB5,
-  DARK_BUT_NOT_BLACK: 0x2C2F33,
-  NOT_QUITE_BLACK: 0x23272A,
+  DARK_PURPLE: 0x71368a,
+  DARK_VIVID_PINK: 0xad1457,
+  DARK_GOLD: 0xc27c0e,
+  DARK_ORANGE: 0xa84300,
+  DARK_RED: 0x992d22,
+  DARK_GREY: 0x979c9f,
+  DARKER_GREY: 0x7f8c8d,
+  LIGHT_GREY: 0xbcc0c0,
+  DARK_NAVY: 0x2c3e50,
+  BLURPLE: 0x7289da,
+  GREYPLE: 0x99aab5,
+  DARK_BUT_NOT_BLACK: 0x2c2f33,
+  NOT_QUITE_BLACK: 0x23272a,
 };
 
 /**
@@ -787,11 +800,11 @@ exports.Colors = {
  * @typedef {string} VerificationLevel
  */
 exports.VerificationLevels = [
-  'None',
-  'Low',
-  'Medium',
-  '(╯°□°）╯︵ ┻━┻',
-  '┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻',
+  "None",
+  "Low",
+  "Medium",
+  "(╯°□°）╯︵ ┻━┻",
+  "┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻",
 ];
 
 /**
@@ -911,10 +924,7 @@ exports.APIErrors = {
  * * MENTIONS
  * @typedef {string} DefaultMessageNotifications
  */
-exports.DefaultMessageNotifications = [
-  'ALL',
-  'MENTIONS',
-];
+exports.DefaultMessageNotifications = ["ALL", "MENTIONS"];
 
 /**
  * The value set for a team members's membership state:
@@ -925,8 +935,8 @@ exports.DefaultMessageNotifications = [
 exports.MembershipStates = [
   // They start at 1
   null,
-  'INVITED',
-  'ACCEPTED',
+  "INVITED",
+  "ACCEPTED",
 ];
 
 /**
@@ -938,6 +948,6 @@ exports.MembershipStates = [
 exports.WebhookTypes = [
   // They start at 1
   null,
-  'Incoming',
-  'Channel Follower',
+  "Incoming",
+  "Channel Follower",
 ];

@@ -1,86 +1,45 @@
-<div align="center">
-  <br />
-  <p>
-    <a href="https://discord.js.org"><img src="https://discord.js.org/static/logo.svg" width="546" alt="discord.js" /></a>
-  </p>
-  <br />
-  <p>
-    <a href="https://discord.gg/bRCvFy9"><img src="https://discordapp.com/api/guilds/222078108977594368/embed.png" alt="Discord server" /></a>
-    <a href="https://www.npmjs.com/package/discord.js"><img src="https://img.shields.io/npm/v/discord.js.svg?maxAge=3600" alt="NPM version" /></a>
-    <a href="https://www.npmjs.com/package/discord.js"><img src="https://img.shields.io/npm/dt/discord.js.svg?maxAge=3600" alt="NPM downloads" /></a>
-    <a href="https://travis-ci.org/discordjs/discord.js"><img src="https://travis-ci.org/discordjs/discord.js.svg" alt="Build status" /></a>
-    <a href="https://david-dm.org/discordjs/discord.js"><img src="https://img.shields.io/david/discordjs/discord.js.svg?maxAge=3600" alt="Dependencies" /></a>
-  </p>
-  <p>
-    <a href="https://nodei.co/npm/discord.js/"><img src="https://nodei.co/npm/discord.js.png?downloads=true&stars=true" alt="NPM info" /></a>
-  </p>
-</div>
+# 😎 Zelfbut.js
 
-## About
-discord.js is a powerful [node.js](https://nodejs.org) module that allows you to interact with the
-[Discord API](https://discordapp.com/developers/docs/intro) very easily.
+Modified Discord.js V11 with updated intents, user agents, and compatibility.
 
-- Object-oriented
-- Predictable abstractions
-- Performant
-- 100% coverage of the Discord API
+## 🛹 Installation
 
-## Installation
-**Node.js 6.0.0 or newer is required.**  
-Ignore any warnings about unmet peer dependencies, as they're all optional.
+Use the package manager [yarn](https://yarnpkg.com/) to install `Zelfbut.js`.
 
-Without voice support: `npm install discord.js`  
-With voice support ([@discordjs/opus](https://www.npmjs.com/package/@discordjs/opus)): `npm install discord.js @discordjs/opus`  
-With voice support ([opusscript](https://www.npmjs.com/package/opusscript)): `npm install discord.js opusscript`
+```bash
+yarn add Cync7X/zelfbut.js
+```
 
-### Audio engines
-The preferred audio engine is @discordjs/opus, as it performs significantly better than opusscript. When both are available, discord.js will automatically choose @discordjs/opus.
-Using opusscript is only recommended for development environments where @discordjs/opus is tough to get working.
-For production bots, using @discordjs/opus should be considered a necessity, especially if they're going to be running on multiple servers.
+_You can use [NPM](https://www.npmjs.com/) as well._
 
-### Optional packages
-- [bufferutil](https://www.npmjs.com/package/bufferutil) to greatly speed up the WebSocket when *not* using uws (`npm install bufferutil`)
-- [erlpack](https://github.com/hammerandchisel/erlpack) for significantly faster WebSocket data (de)serialisation (`npm install hammerandchisel/erlpack`)
-- One of the following packages can be installed for faster voice packet encryption and decryption:
-    - [sodium](https://www.npmjs.com/package/sodium) (`npm install sodium`)
-    - [libsodium.js](https://www.npmjs.com/package/libsodium-wrappers) (`npm install libsodium-wrappers`)
+## 💻 Usage
 
-## Example usage
-```js
-const Discord = require('discord.js');
-const client = new Discord.Client();
+```javascript
+const Discord = require("discord.js"); // Installs as discord.js
+const client = new Discord.Client(); // Initialize a new Client
 
-client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+client.on("ready", () => {
+  console.log(`Logged in as ${client.user.username}!`);
 });
 
-client.on('message', msg => {
-  if (msg.content === 'ping') {
-    msg.reply('pong');
+client.on("message", (message) => {
+  if (message.content === "?!!hello") {
+    message.delete();
+    message.channel.send("Hello, How are you?");
   }
 });
 
-client.login('token');
+client.login(token);
 ```
 
-## Links
-* [Website](https://discord.js.org/) ([source](https://github.com/discordjs/website))
-* [Documentation](https://discord.js.org/#/docs)
-* [Guide](https://discordjs.guide/) ([source](https://github.com/discordjs/guide))
-* [Discord.js Discord server](https://discord.gg/bRCvFy9)
-* [Discord API Discord server](https://discord.gg/discord-api)
-* [GitHub](https://github.com/discordjs/discord.js)
-* [NPM](https://www.npmjs.com/package/discord.js)
-* [Related libraries](https://discordapi.com/unofficial/libs.html)
+## ⚙ Contributing
 
-### Extensions
-* [RPC](https://www.npmjs.com/package/discord-rpc) ([source](https://github.com/discordjs/RPC))
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-## Contributing
-Before creating an issue, please ensure that it hasn't already been reported/suggested, and double-check the
-[documentation](https://discord.js.org/#/docs).  
-See [the contribution guide](https://github.com/discordjs/discord.js/blob/master/.github/CONTRIBUTING.md) if you'd like to submit a PR.
+Please make sure to update tests as appropriate.
 
-## Help
-If you don't understand something in the documentation, you are experiencing problems, or you just need a gentle
-nudge in the right direction, please don't hesitate to join our official [Discord.js Server](https://discord.gg/bRCvFy9).
+## © License
+
+**Original Repo:** [discord.js](https://github.com/discordjs) **//**
+**Documentation:** [discord.js.org](https://discord.js.org/#/docs/main/11.4.2/general/welcome) **//**
+**License:** [Apache](https://github.com/discordjs/discord.js/blob/master/LICENSE)
