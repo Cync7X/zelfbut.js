@@ -1,0 +1,89 @@
+{
+  "_args": [
+    [
+      "prism-media@^0.0.4",
+      "C:\\Documents and Settings\\Dev\\바탕 화면\\tst\\node_modules\\discord.js"
+    ]
+  ],
+  "_from": "prism-media@>=0.0.4 <0.0.5",
+  "_hasShrinkwrap": false,
+  "_id": "prism-media@0.0.4",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/prism-media",
+  "_nodeVersion": "12.14.1",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/prism-media_0.0.4_1579175434891_0.3898660414628732"
+  },
+  "_npmUser": {
+    "email": "amishshah.2k@gmail.com",
+    "name": "hydrabolt"
+  },
+  "_npmVersion": "6.13.4",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "prism-media",
+    "raw": "prism-media@^0.0.4",
+    "rawSpec": "^0.0.4",
+    "scope": null,
+    "spec": ">=0.0.4 <0.0.5",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/discord.js"
+  ],
+  "_resolved": "https://registry.npmjs.org/prism-media/-/prism-media-0.0.4.tgz",
+  "_shasum": "df5ddc6463670c97ff0e9cbac3c3e0db18df326f",
+  "_shrinkwrap": null,
+  "_spec": "prism-media@^0.0.4",
+  "_where": "C:\\Documents and Settings\\Dev\\바탕 화면\\tst\\node_modules\\discord.js",
+  "author": {
+    "email": "amishshah.2k@gmail.com",
+    "name": "Amish Shah"
+  },
+  "bugs": {
+    "url": "https://github.com/hydrabolt/prism-media/issues"
+  },
+  "dependencies": {},
+  "description": "Makes transcoding media easier",
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  },
+  "directories": {},
+  "dist": {
+    "fileCount": 14,
+    "integrity": "sha512-dG2w7WtovUa4SiYTdWn9H8Bd4JNdei2djtkP/Bk9fXq81j5Q15ZPHYSwhUVvBRbp5zMkGtu0Yk62HuMcly0pRw==",
+    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJeIE4LCRA9TVsSAnZWagAALgYP/j+kBp29ry3QyuX1sWjw\nXqF5ldXxilcN6oxoZTafo/Xc3VmkkPKEFGV+dl3zBB59DmSMv+Mu5b5+kgn6\nBtMasIv7x8ADvabilVOm1vMARJ9N/FjIe0RBB0ke1qBqCffiJtbkCKy4HQUb\n0tSwH5L/WCEg//b3SR/hysK5+7rPicWGGtxrBCwFJ6hoTa94hUbQ2SVB9+Av\nL3CESrPYk3n7AmIKZ8daBZNp3EYYRmFE+1jR2uM3FKVFS4OycvI7msVapH48\ndOVrMJknZK+uICD+u6uJ8O6cFwzgjYjkGn3sePQnlNhXeROEJPRL2O1zqsun\nxXhGSq4ZKbpOUgFxZz48i8jFeHCSmiiBwta4V3zrE2QoREDRv/Rp2G+FQRDE\nMYig1McWsRmBI0+v22LTHR5HOI5flJlMOpAkD6ptRRaglfQkxAt2O4WW7nlM\nGjM1khDZcmeOIpUc+XK8lsZ+Lo6O73NcX1BHnx7gB6MdfGBXmxBfRx+T1bmf\nB9bZr0ZdeAMFydFz0H0KoRSU9L3AQGDG64m9+F8a//e1MeIVZWmm0o9c0X1i\nWqBplUblte/qfHzRTq/bLYVDoyyua2SlkylwB8MoyonEUNC4mFDc/zimnT7Y\nxLTo+pMuArENX2BhxeSBqdJ0MmtypdMX/SegElaVTPRhEN8bGQS2WNAB1MQd\nrE5q\r\n=cK2p\r\n-----END PGP SIGNATURE-----\r\n",
+    "shasum": "df5ddc6463670c97ff0e9cbac3c3e0db18df326f",
+    "tarball": "https://registry.npmjs.org/prism-media/-/prism-media-0.0.4.tgz",
+    "unpackedSize": 26096
+  },
+  "gitHead": "43662f645f2128f0c01e4146ecfd6b4664387dc6",
+  "homepage": "https://github.com/hydrabolt/prism-media#readme",
+  "keywords": [
+    "audio",
+    "media",
+    "ffmpeg"
+  ],
+  "license": "Apache-2.0",
+  "main": "src/index.js",
+  "maintainers": [
+    {
+      "email": "amishshah.2k@gmail.com",
+      "name": "hydrabolt"
+    }
+  ],
+  "name": "prism-media",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hydrabolt/prism-media.git"
+  },
+  "scripts": {
+    "lint": "eslint src && eslint test",
+    "test": "npm run lint"
+  },
+  "version": "0.0.4"
+}
